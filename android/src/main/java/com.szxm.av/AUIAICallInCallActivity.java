@@ -409,11 +409,15 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                         btnAiCallFullScreenSubtitle.setBackgroundResource(R.drawable.bg_btn_subtitle_black);
                         btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.white));
                         btnCameraDirectionNew.setVisibility(VISIBLE);
+                        setTimeTitleWhite(true);
+                    }else {
+                        setTimeTitleWhite(false);
                     }
                 } else {
                     btnAiCallFullScreenSubtitle.setBackgroundResource(R.drawable.bg_btn_subtitle_white);
                     btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_1A1A1A));
                     btnCameraDirectionNew.setVisibility(GONE);
+                    setTimeTitleWhite(false);
                 }
                 mSubtitleHolder.setFullScreenSubtitleVisibility(!mIsFullScreenSubtitleOpen);
             }
@@ -431,7 +435,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             }
         });
 
-       String aiAgentRegion = null;
+        String aiAgentRegion = null;
         String aiAgentId = null;
         mAiAgentType = ARTCAICallEngine.ARTCAICallAgentType.VoiceAgent;
         String loginUserId = null;
@@ -1039,7 +1043,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         private RecyclerView mRvFullScreenSubtitle = null;
         private List<AICallSubtitleMessageItem> mFullScreenSubtitleMessageList = new ArrayList<>();
         private AICallSubtitleRecyclerViewAdapter mSubtitleItemAdapter = null;
-        private boolean shouldSubtitleAutoScroll = false;
+        private boolean shouldSubtitleAutoScroll = true;
         private Integer mAsrSentenceId = null;
         private Boolean isLastSubtitleOfAsr = null;
         private static final int INTERNATIONAL_WORD_INTERVAL = 30;
@@ -1062,7 +1066,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
 //            layoutManager.setStackFromEnd(true);
             mRvFullScreenSubtitle.setLayoutManager(layoutManager);
             // 设置列表项间距
-            mRvFullScreenSubtitle.addItemDecoration(new AICallSubtitleSpacingItemDecoraion(20));
+//            mRvFullScreenSubtitle.addItemDecoration(new AICallSubtitleSpacingItemDecoraion(30));
             // 添加手动滚动监听
             mRvFullScreenSubtitle.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -1084,7 +1088,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         private void updateSubtitle(boolean isAsrText, boolean end, String text, int asrSentenceId) {
             Log.i("AUIAICall", "updateSubtitle [isAsrText" + isAsrText + ", end: " + end +
                     ", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
-            boolean resetSubtitle = false;
+             boolean resetSubtitle = false;
             if (isLastSubtitleOfAsr == null || isAsrText || isLastSubtitleOfAsr) { // asr字幕、robot字幕切换
                 resetSubtitle = true;
             } else if (mAsrSentenceId == null || mAsrSentenceId != asrSentenceId) { // 新对话
@@ -1196,7 +1200,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             isOpenMuted = isMuted;
             if (isMuted) {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivMuteCall.setImageResource(R.drawable.ic_voice_mute_white);
+                    ivMuteCall.setImageResource(R.drawable.blur_voice_open);
                 }else {
                     ivMuteCall.setImageResource(R.drawable.ic_voice_mute);
                 }
@@ -1206,7 +1210,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 tvCallMicrophone.setText(R.string.microphone_open);
             } else {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivMuteCall.setImageResource(R.drawable.ic_voice_open_white);
+                    ivMuteCall.setImageResource(R.drawable.blur_voice_close);
                     tvCallMicrophone.setTextColor(getResources().getColor(R.color.white));
                 }else {
                     ivMuteCall.setImageResource(R.drawable.ic_voice_open);
@@ -1352,11 +1356,11 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 tvCamera.setText(R.string.camera_off);
             } else {
                 isOpenCamera = true;
-                ivCamera.setImageResource(R.drawable.ic_camera_preview_on_white);
+                ivCamera.setImageResource(R.drawable.blur_video_open);
                 if (isOpenMuted){
-                    ivMuteCall.setImageResource(R.drawable.ic_voice_mute_white);
+                    ivMuteCall.setImageResource(R.drawable.blur_voice_open);
                 }else{
-                    ivMuteCall.setImageResource(R.drawable.ic_voice_open_white);
+                    ivMuteCall.setImageResource(R.drawable.blur_voice_close);
                 }
                 setTypeWhite();
                 tvCamera.setText(R.string.camera_on);
@@ -1365,14 +1369,12 @@ public class AUIAICallInCallActivity extends ComponentActivity {
     }
 
     private void setTypeWhite(){
-
         if (!mIsFullScreenSubtitleOpen) {
             btnAiCallFullScreenSubtitle.setBackground(getResources().getDrawable(R.drawable.bg_btn_subtitle_black));
             btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.white));
             btnCameraDirectionNew.setVisibility(VISIBLE);
         }
-        tvCallDuration.setTextColor(getResources().getColor(R.color.white));
-        tvCallTips.setTextColor(getResources().getColor(R.color.white));
+        setTimeTitleWhite(true);
     }
 
     private void setType51565F(){
@@ -1381,8 +1383,19 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_51565F));
             btnCameraDirectionNew.setVisibility(GONE);
         }
-        tvCallTips.setTextColor(getResources().getColor(R.color.color_51565F));
-        tvCallDuration.setTextColor(getResources().getColor(R.color.color_51565F));
+        setTimeTitleWhite(false);
+    }
+
+    private void setTimeTitleWhite(boolean isWhite){
+        if (isWhite){
+            tvCallDuration.setTextColor(getResources().getColor(R.color.white));
+            tvCallTips.setTextColor(getResources().getColor(R.color.white));
+            tvCallMicrophone.setTextColor(getResources().getColor(R.color.white));
+        }else{
+            tvCallTips.setTextColor(getResources().getColor(R.color.color_51565F));
+            tvCallDuration.setTextColor(getResources().getColor(R.color.color_51565F));
+            tvCallMicrophone.setTextColor(getResources().getColor(R.color.color_51565F));
+        }
     }
     // VisionChat
     private class VisionActionLayerHolder extends ActionLayerHolder {

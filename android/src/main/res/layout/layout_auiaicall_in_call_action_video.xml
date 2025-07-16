@@ -19,7 +19,7 @@
             android:id="@+id/iv_mute_call"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_voice_mute_white" />
+            android:src="@drawable/blur_voice_open" />
         <TextView
             android:id="@+id/tv_mute_call"
             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
             android:id="@+id/iv_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_camera_preview_on_white"/>
+            android:src="@drawable/blur_video_open"/>
         <TextView
             android:id="@+id/tv_camera"
             android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginRight="60dp"
-        android:src="@drawable/ic_camera_direction"
+        android:src="@drawable/blur_direction_icon"
         app:layout_constraintTop_toBottomOf="@id/btn_camera"
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"/>

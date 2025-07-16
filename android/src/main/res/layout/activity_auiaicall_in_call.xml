@@ -182,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp_108"
-            android:layout_marginBottom="@dimen/dp_230"/>
+            android:layout_marginBottom="@dimen/dp_243"/>
     </LinearLayout>
 
     <!-- 底部蒙版，开启字幕时修改底部背景颜色 -->
@@ -213,14 +213,14 @@
         app:layout_constraintRight_toRightOf="parent"
         android:textSize="@dimen/sp_15"
         android:textColor="@color/color_51565F"
-        android:layout_marginBottom="@dimen/dp_68"
+        android:layout_marginBottom="@dimen/dp_60"
         android:text="00:00"/>
 
     <TextView
         android:id="@+id/tv_call_tips"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_30"
+        android:layout_marginBottom="@dimen/dp_28"
         android:text="@string/robot_speaking_tips"
         android:textAlignment="center"
         android:textColor="@color/color_51565F"
@@ -232,7 +232,7 @@
         android:id="@+id/tv_call_microphone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_30"
+        android:layout_marginBottom="@dimen/dp_28"
         android:text=""
         android:textAlignment="center"
         android:textColor="@color/color_51565F"
@@ -261,13 +261,13 @@
     
     <ImageView
         android:id="@+id/btn_camera_direction_new"
-        android:layout_width="@dimen/dp_44"
-        android:layout_height="@dimen/dp_44"
-        android:src="@drawable/ic_camera_direction"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/blur_direction_icon"
         android:padding="@dimen/dp_4"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/dp_46"
-        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_12"
         android:visibility="gone"
         app:layout_constraintRight_toLeftOf="@id/btn_ai_call_full_screen_subtitle"/>
 
