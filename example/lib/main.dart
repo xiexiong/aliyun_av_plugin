@@ -4,7 +4,6 @@
 //   String subtitle = await AliyunAvPlugin.showRealtimeSubtitle(sessionId: "session1");
 //   await AliyunAvPlugin.interruptAgent(agentId: "agent1");
 // }
-import 'package:aliyun_av_plugin/aliyun_av_plugin.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,27 +33,16 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-Future<void> _startCallVoice() async {
-  try {
-    bool isSuccess = await AliyunAvPlugin.callVoiceAgent(userId: "user1", loginAuthor: "channelA");
-    // ignore: avoid_print
-    print('========Start call result: $isSuccess');
-  } catch (e) {
-    // ignore: avoid_print
-    print('========Start call error: $e');
-  }
-}
-
-Future<void> _startCallVideo() async {
-  try {
-    bool isSuccess = await AliyunAvPlugin.callViodeAgent(userId: "user1", loginAuthor: "channelA");
-    // ignore: avoid_print
-    print('========Start call result: $isSuccess');
-  } catch (e) {
-    // ignore: avoid_print
-    print('========Start call error: $e');
-  }
-}
+// Future<void> _startCallVoice() async {
+//   try {
+//     bool isSuccess = await AliyunAvPlugin.callAgentType(userId: "user1", loginAuthor: "channelA");
+//     // ignore: avoid_print
+//     print('========Start call result: $isSuccess');
+//   } catch (e) {
+//     // ignore: avoid_print
+//     print('========Start call error: $e');
+//   }
+// }
 
 class AvCallPage extends StatelessWidget {
   const AvCallPage({super.key});
@@ -69,7 +57,7 @@ class AvCallPage extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 print('语音通话');
-                _startCallVoice();
+                // _startCallVoice();
               },
               child: Container(width: 200.0, color: Colors.amber, child: Text('语音通话')),
             ),
@@ -79,7 +67,7 @@ class AvCallPage extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 print('视频通话');
-                _startCallVideo();
+                // _startCallVideo();
               },
               child: Container(width: 200.0, color: Colors.amber, child: Text('视频通话')),
             ),

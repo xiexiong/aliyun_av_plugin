@@ -8,6 +8,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import com.szxm.av.AUIAICallInCallController
+import com.szxm.av.RtcConfigBean
 
 class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
@@ -21,36 +22,24 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        try {
-            when (call.method) {
-                "callVoiceAgent" -> {
-                    val userId = call.argument<String>("UserId")
-                    val loginAuthor = call.argument<String>("loginAuthorization")
-                    if (userId != null && loginAuthor != null) {
-                        AUIAICallInCallController.initialize(appContext)
-                        AUIAICallInCallController.getInstance().callVoiceAgent(userId, loginAuthor)
-                        result.success(true)
-                    } else {
-                        result.error("INVALID_ARGUMENTS", "UserId or loginAuthorization is null", null)
-                    }
+    try {
+        when (call.method) {
+            "callAgentType" -> {
+                val rtcConfigMap = call.argument<Map<String, String>>("rtcConfigBean")
+                if (rtcConfigMap != null) {
+                    AUIAICallInCallController.initialize(appContext)
+                    AUIAICallInCallController.getInstance().callAgentType(rtcConfigMap.get("appId"),rtcConfigMap.get("appKey"),rtcConfigMap.get("channelId"),rtcConfigMap.get("agentType"),rtcConfigMap.get("agentId"),rtcConfigMap.get("token"),rtcConfigMap.get("userId"),rtcConfigMap.get("loginAuthorization"),rtcConfigMap.get("chatBotAgentId"), rtcConfigMap.get("sessionId"), rtcConfigMap.get("receiverId"))
+                    result.success(true)
+                } else {
+                    result.error("INVALID_ARGUMENTS", "rtcConfigBean is null", null)
                 }
-                "callViodeAgent" -> {
-                    val userId = call.argument<String>("UserId")
-                    val loginAuthor = call.argument<String>("loginAuthorization")
-                    if (userId != null && loginAuthor != null) {
-                        AUIAICallInCallController.initialize(appContext)
-                        AUIAICallInCallController.getInstance().callViodeAgent(userId, loginAuthor)
-                        result.success(true)
-                    } else {
-                        result.error("INVALID_ARGUMENTS", "UserId or loginAuthorization is null", null)
-                    }
-                }
-                else -> result.notImplemented()
             }
-        } catch (e: Exception) {
-            result.error("PLUGIN_ERROR", e.message, null)
+            else -> result.notImplemented()
         }
+    } catch (e: Exception) {
+        result.error("PLUGIN_ERROR", e.message, null)
     }
+}
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)

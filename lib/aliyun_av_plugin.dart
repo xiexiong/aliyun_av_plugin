@@ -1,21 +1,21 @@
+import 'package:aliyun_av_plugin/bean/rtc_config.dart';
 import 'package:flutter/services.dart';
 
 class AliyunAvPlugin {
   static const MethodChannel _channel = MethodChannel('aliyun_av_plugin');
 
-  /// 启动音频通话
-  static Future<bool> callVoiceAgent({required String userId, required String loginAuthor}) async {
-    return await _channel.invokeMethod('callVoiceAgent', {
-      'UserId': userId,
-      'loginAuthorization': loginAuthor,
-    });
-  }
-
-  /// 启动视频通话
-  static Future<bool> callViodeAgent({required String userId, required String loginAuthor}) async {
-    return await _channel.invokeMethod('callViodeAgent', {
-      'UserId': userId,
-      'loginAuthorization': loginAuthor,
-    });
+  /// 启动音视频通话
+  static Future<bool> callAgentType({required RtcConfig rtcConfig}) async {
+    try {
+      // 建议将 rtcConfig 转为 Map 传递，确保平台端能正确解析
+      final result = await _channel.invokeMethod<bool>('callAgentType', {
+        'rtcConfigBean': rtcConfig.toMap(),
+      });
+      return result ?? false;
+    } on PlatformException catch (e) {
+      // 可根据实际需求打印日志或上报错误
+      print('callAgentType error: ${e.message}');
+      return false;
+    }
   }
 }

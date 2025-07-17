@@ -8,6 +8,9 @@ class RtcConfig {
   final String chatBotAgentId;
   final String sessionId;
   final String receiverId;
+  final String agentType;
+  final String loginAuthorization;
+  final String agentId;
 
   RtcConfig({
     required this.appId,
@@ -18,6 +21,9 @@ class RtcConfig {
     required this.chatBotAgentId,
     required this.sessionId,
     required this.receiverId,
+    required this.agentType,
+    required this.loginAuthorization,
+    required this.agentId,
   });
 
   // 可选：从Map创建对象
@@ -31,11 +37,14 @@ class RtcConfig {
       chatBotAgentId: map['chatBotAgentId'] ?? '',
       sessionId: map['sessionId'] ?? '',
       receiverId: map['receiverId'] ?? '',
+      agentType: map['agentType'] ?? '',
+      loginAuthorization: map['loginAuthorization'] ?? '',
+      agentId: map['agentId'] ?? '',
     );
   }
 
   // 可选：转为Map
-  Map<String, dynamic> toMap() {
+  Map<String, String> toMap() {
     return {
       'appId': appId,
       'appKey': appKey,
@@ -45,6 +54,9 @@ class RtcConfig {
       'chatBotAgentId': chatBotAgentId,
       'sessionId': sessionId,
       'receiverId': receiverId,
+      'agentType': agentType,
+      'loginAuthorization': loginAuthorization,
+      'agentId': agentId,
     };
   }
 }
