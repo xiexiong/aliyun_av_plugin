@@ -11,38 +11,55 @@ import com.szxm.av.AUIAICallInCallController
 import com.szxm.av.RtcConfigBean
 
 class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware {
-    private lateinit var channel: MethodChannel
+    companion object {
+        @JvmStatic
+        var channel: MethodChannel? = null
+    }
+
     private var activity: Activity? = null
     private lateinit var appContext: Context
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         appContext = binding.applicationContext
         channel = MethodChannel(binding.binaryMessenger, "aliyun_av_plugin")
-        channel.setMethodCallHandler(this)
+        channel?.setMethodCallHandler(this)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    try {
-        when (call.method) {
-            "callAgentType" -> {
-                val rtcConfigMap = call.argument<Map<String, String>>("rtcConfigBean")
-                if (rtcConfigMap != null) {
-                    AUIAICallInCallController.initialize(appContext)
-                    AUIAICallInCallController.getInstance().callAgentType(rtcConfigMap.get("appId"),rtcConfigMap.get("appKey"),rtcConfigMap.get("channelId"),rtcConfigMap.get("agentType"),rtcConfigMap.get("agentId"),rtcConfigMap.get("token"),rtcConfigMap.get("userId"),rtcConfigMap.get("loginAuthorization"),rtcConfigMap.get("chatBotAgentId"), rtcConfigMap.get("sessionId"), rtcConfigMap.get("receiverId"))
-                    result.success(true)
-                } else {
-                    result.error("INVALID_ARGUMENTS", "rtcConfigBean is null", null)
+        try {
+            when (call.method) {
+                "callAgentType" -> {
+                    val rtcConfigMap = call.argument<Map<String, String>>("rtcConfigBean")
+                    if (rtcConfigMap != null) {
+                        AUIAICallInCallController.initialize(appContext)
+                        AUIAICallInCallController.getInstance().callAgentType(
+                            rtcConfigMap["appId"],
+                            rtcConfigMap["appKey"],
+                            rtcConfigMap["channelId"],
+                            rtcConfigMap["agentType"],
+                            rtcConfigMap["agentId"],
+                            rtcConfigMap["token"],
+                            rtcConfigMap["userId"],
+                            rtcConfigMap["loginAuthorization"],
+                            rtcConfigMap["chatBotAgentId"],
+                            rtcConfigMap["sessionId"],
+                            rtcConfigMap["receiverId"]
+                        )
+                        result.success(true)
+                    } else {
+                        result.error("INVALID_ARGUMENTS", "rtcConfigBean is null", null)
+                    }
                 }
+                else -> result.notImplemented()
             }
-            else -> result.notImplemented()
+        } catch (e: Exception) {
+            result.error("PLUGIN_ERROR", e.message, null)
         }
-    } catch (e: Exception) {
-        result.error("PLUGIN_ERROR", e.message, null)
     }
-}
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
+        channel?.setMethodCallHandler(null)
+        channel = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

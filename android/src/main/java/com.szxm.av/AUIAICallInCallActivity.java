@@ -59,6 +59,8 @@ import com.szxm.av.widget.AICallSentenceLatencyViewModel;
 import com.szxm.av.widget.AICallSubtitleMessageItem;
 import com.szxm.av.widget.AICallSubtitleRecyclerViewAdapter;
 import com.szxm.av.widget.AICallSubtitleSpacingItemDecoraion;
+import com.example.aliyun_av_plugin.AliyunAvPlugin;
+import io.flutter.plugin.common.MethodChannel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class AUIAICallInCallActivity extends ComponentActivity {
@@ -1086,7 +1090,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         }
 
         private void updateSubtitle(boolean isAsrText, boolean end, String text, int asrSentenceId) {
-            Log.i("AUIAICall", "updateSubtitle [isAsrText" + isAsrText + ", end: " + end +
+            Log.i("AUIAICall", "updateSubtitle [isAsrText：" + isAsrText + ", end: " + end +
                     ", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
              boolean resetSubtitle = false;
             if (isLastSubtitleOfAsr == null || isAsrText || isLastSubtitleOfAsr) { // asr字幕、robot字幕切换
@@ -1094,6 +1098,17 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             } else if (mAsrSentenceId == null || mAsrSentenceId != asrSentenceId) { // 新对话
                 resetSubtitle = true;
             }
+            // 主动推送到Flutter ---start
+            MethodChannel channel = AliyunAvPlugin.Companion.getChannel();
+            if (channel != null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("isAsrText", isAsrText);
+                params.put("end", end);
+                params.put("text", text);
+                params.put("asrSentenceId", asrSentenceId);
+                channel.invokeMethod("onSubtitleUpdate", params);
+            }
+            // 主动推送到Flutter ---end
             mAsrSentenceId = asrSentenceId;
             isLastSubtitleOfAsr = isAsrText;
             if (resetSubtitle) {
