@@ -42,7 +42,10 @@ class _MyAppState extends State<MyApp> {
         : Container(
           padding: const EdgeInsets.all(12),
           color: Colors.black54,
-          child: Text(_subtitle!.text, style: const TextStyle(color: Colors.white, fontSize: 18)),
+          child: Text(
+            _subtitle!.text ?? '',
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
         );
   }
 }

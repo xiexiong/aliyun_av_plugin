@@ -105,6 +105,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
 
 //    private AUIAICallAgentAnimator mAICallAgentAnimator = null;
     private boolean mIsPreviewShowInSmallView = true;
+    private MethodChannel channel = AliyunAvPlugin.Companion.getChannel();
 
     // 对话延时
     private final List<AICallSentenceLatencyItem> aiCallSentenceLatencyItems = new ArrayList<>();
@@ -1090,25 +1091,12 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         }
 
         private void updateSubtitle(boolean isAsrText, boolean end, String text, int asrSentenceId) {
-            Log.i("AUIAICall", "updateSubtitle [isAsrText：" + isAsrText + ", end: " + end +
-                    ", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
              boolean resetSubtitle = false;
             if (isLastSubtitleOfAsr == null || isAsrText || isLastSubtitleOfAsr) { // asr字幕、robot字幕切换
                 resetSubtitle = true;
             } else if (mAsrSentenceId == null || mAsrSentenceId != asrSentenceId) { // 新对话
                 resetSubtitle = true;
             }
-            // 主动推送到Flutter ---start
-            MethodChannel channel = AliyunAvPlugin.Companion.getChannel();
-            if (channel != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("isAsrText", isAsrText);
-                params.put("end", end);
-                params.put("text", text);
-                params.put("asrSentenceId", asrSentenceId);
-                channel.invokeMethod("onSubtitleUpdate", params);
-            }
-            // 主动推送到Flutter ---end
             mAsrSentenceId = asrSentenceId;
             isLastSubtitleOfAsr = isAsrText;
             if (resetSubtitle) {
@@ -1129,6 +1117,19 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             } else {
                 mSubtitleItemAdapter.appendToLastSubtitle(subtitleMessageItem);
             }
+            Log.i("AUIAICall", "updateSubtitle [isAsrText：" + isAsrText + ", end: " + end +", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
+            // 主动推送到Flutter ---start
+            if (channel != null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("resetSubtitle", resetSubtitle);
+                params.put("isAsrText", isAsrText);
+                params.put("end", end);
+                params.put("text", text);
+                params.put("asrSentenceId", asrSentenceId);
+                channel.invokeMethod("onSubtitleUpdate", params);
+            }
+            // 主动推送到Flutter ---end
+
             // 更新字幕时检查是否应该自动滚动
             if(shouldSubtitleAutoScroll) {
                 mRvFullScreenSubtitle.scrollToPosition(mSubtitleItemAdapter.getItemCount() - 1);
