@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:aliyun_av_plugin/bean/subtitle_message.dart';
 
 class SubtitleUtil {

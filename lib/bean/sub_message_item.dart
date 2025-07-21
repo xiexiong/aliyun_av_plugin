@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 class SubMessageItem {
   bool _isAsrText;
   int _asrSentenceId;
@@ -18,6 +20,8 @@ class SubMessageItem {
        _displayEndTime = displayEndTime;
 
   // Getter方法
+  // ignore: duplicate_ignore
+  // ignore: unnecessary_getters_setters
   bool get isAsrText => _isAsrText;
   int get asrSentenceId => _asrSentenceId;
   int get receiveTime => _receiveTime;

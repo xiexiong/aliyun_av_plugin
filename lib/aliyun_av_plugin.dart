@@ -15,6 +15,7 @@ class AliyunAvPlugin {
       return result ?? false;
     } on PlatformException catch (e) {
       // 可根据实际需求打印日志或上报错误
+      // ignore: avoid_print
       print('callAgentType error: ${e.message}');
       return false;
     }
