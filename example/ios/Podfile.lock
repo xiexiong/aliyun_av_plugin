@@ -1,0 +1,89 @@
+PODS:
+  - AliVCInteractionMessage (1.8.0):
+    - AliVCInteractionMessage/Default (= 1.8.0)
+  - AliVCInteractionMessage/Default (1.8.0)
+  - AliVCSDK_ARTC (7.3.0):
+    - AliVCSDK_ARTC/Default (= 7.3.0)
+  - AliVCSDK_ARTC/Default (7.3.0)
+  - aliyun_av_plugin (0.0.1):
+    - AUIAICall/Chatbot
+    - Flutter
+  - ARTCAICallKit/AEC (2.6.0)
+  - ARTCAICallKit/Chat (2.6.0):
+    - AliVCInteractionMessage
+  - ARTCAICallKit/Chatbot (2.6.0):
+    - ARTCAICallKit/AEC
+    - ARTCAICallKit/Chat
+  - AUIAICall/Chatbot (2.6.0):
+    - ARTCAICallKit/Chatbot
+    - AUIFoundation
+    - lottie-ios
+    - MJRefresh
+    - SDWebImage
+    - SwiftyMarkdown
+  - AUIFoundation (6.11.0):
+    - AUIFoundation/All (= 6.11.0)
+    - Masonry
+  - AUIFoundation/All (6.11.0):
+    - Masonry
+  - Flutter (1.0.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - lottie-ios (4.4.1)
+  - Masonry (1.1.0)
+  - MJRefresh (3.7.9)
+  - SDWebImage (5.21.0):
+    - SDWebImage/Core (= 5.21.0)
+  - SDWebImage/Core (5.21.0)
+  - SwiftyMarkdown (1.2.4)
+
+DEPENDENCIES:
+  - AliVCSDK_ARTC (~> 7.3.0)
+  - aliyun_av_plugin (from `.symlinks/plugins/aliyun_av_plugin/ios`)
+  - ARTCAICallKit/Chatbot (~> 2.6.0)
+  - AUIAICall/Chatbot (from `./AUIAICall/`)
+  - AUIFoundation (from `./AUIAICall/AUIBaseKits/AUIFoundation/`)
+  - Flutter (from `Flutter`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AliVCInteractionMessage
+    - AliVCSDK_ARTC
+    - ARTCAICallKit
+    - lottie-ios
+    - Masonry
+    - MJRefresh
+    - SDWebImage
+    - SwiftyMarkdown
+
+EXTERNAL SOURCES:
+  aliyun_av_plugin:
+    :path: ".symlinks/plugins/aliyun_av_plugin/ios"
+  AUIAICall:
+    :path: "./AUIAICall/"
+  AUIFoundation:
+    :path: "./AUIAICall/AUIBaseKits/AUIFoundation/"
+  Flutter:
+    :path: Flutter
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+
+SPEC CHECKSUMS:
+  AliVCInteractionMessage: 84edc775865ab54a43e085d5b7660e345e8f80d0
+  AliVCSDK_ARTC: fbbeef4a1e42c421ecae0dff2420eedc77512d10
+  aliyun_av_plugin: cbb6b5bb6958786ff0513794b60146495b2bd67d
+  ARTCAICallKit: f957e46694bf4e07a384bf927331586677147b2b
+  AUIAICall: f8158d23c34bc1037f8ada8ffd3ecebecb339a31
+  AUIFoundation: 52ca58ffc03377ff0907dab6995cdf618dff5202
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  lottie-ios: e047b1d2e6239b787cc5e9755b988869cf190494
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
+  SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
+  SwiftyMarkdown: 7cdec87c6ab5cd9ea0e22ced288e889960649ba5
+
+PODFILE CHECKSUM: 2c9c84211a40d51c4977a2bca5f498b981af4f73
+
+COCOAPODS: 1.16.2
