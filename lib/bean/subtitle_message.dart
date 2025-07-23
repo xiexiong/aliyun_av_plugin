@@ -4,6 +4,7 @@ class SubtitleMessage {
   final bool end; //检测是否讲完句子
   String? text; //句子文本
   final int asrSentenceId; //句子id
+  final bool isCallEnd;
 
   SubtitleMessage({
     required this.resetSubtitle,
@@ -11,6 +12,7 @@ class SubtitleMessage {
     required this.end,
     required this.text,
     required this.asrSentenceId,
+    required this.isCallEnd,
   });
 
   factory SubtitleMessage.fromMap(Map<String, dynamic> map) {
@@ -20,6 +22,7 @@ class SubtitleMessage {
       end: map['end'] as bool,
       text: map['text'] as String,
       asrSentenceId: map['asrSentenceId'] as int,
+      isCallEnd: map['isCallEnd'] as bool,
     );
   }
 }
