@@ -247,6 +247,18 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         @Override
         public void onCallEnd() {
             Log.i(TAG, "onCallEnd: ");
+            // 主动推送到Flutter ---start
+            if (channel != null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("resetSubtitle", false);
+                params.put("isAsrText", false);
+                params.put("end", false);
+                params.put("text", "");
+                params.put("asrSentenceId", 0);
+                params.put("isCallEnd",true);
+                channel.invokeMethod("onSubtitleUpdate", params);
+            }
+            // 主动推送到Flutter ---end
         }
 
         @Override
@@ -1126,6 +1138,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 params.put("end", end);
                 params.put("text", text);
                 params.put("asrSentenceId", asrSentenceId);
+                params.put("isCallEnd",false);
                 channel.invokeMethod("onSubtitleUpdate", params);
             }
             // 主动推送到Flutter ---end

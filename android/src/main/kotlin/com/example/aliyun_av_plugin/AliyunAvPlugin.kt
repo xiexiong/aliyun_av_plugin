@@ -24,7 +24,6 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
         channel = MethodChannel(binding.binaryMessenger, "aliyun_av_plugin")
         channel?.setMethodCallHandler(this)
     }
-
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         try {
             when (call.method) {
@@ -33,7 +32,7 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
                     if (rtcConfigMap != null) {
                         AUIAICallInCallController.initialize(appContext)
                         AUIAICallInCallController.getInstance().callAgentType(
-                            rtcConfigMap["appId"],
+                             rtcConfigMap["appId"],
                             rtcConfigMap["appKey"],
                             rtcConfigMap["channelId"],
                             rtcConfigMap["agentType"],
