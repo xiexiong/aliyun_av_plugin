@@ -5,9 +5,7 @@ class RtcConfig {
   final String channelId;
   final String userId;
   final String token;
-  final String chatBotAgentId;
   final String sessionId;
-  final String receiverId;
   final String agentType;
   final String loginAuthorization;
   final String agentId;
@@ -18,9 +16,7 @@ class RtcConfig {
     required this.channelId,
     required this.userId,
     required this.token,
-    required this.chatBotAgentId,
     required this.sessionId,
-    required this.receiverId,
     required this.agentType,
     required this.loginAuthorization,
     required this.agentId,
@@ -34,9 +30,7 @@ class RtcConfig {
       channelId: map['channelId'] ?? '',
       userId: map['userId'] ?? '',
       token: map['token'] ?? '',
-      chatBotAgentId: map['chatBotAgentId'] ?? '',
       sessionId: map['sessionId'] ?? '',
-      receiverId: map['receiverId'] ?? '',
       agentType: map['agentType'] ?? '',
       loginAuthorization: map['loginAuthorization'] ?? '',
       agentId: map['agentId'] ?? '',
@@ -51,9 +45,7 @@ class RtcConfig {
       'channelId': channelId,
       'userId': userId,
       'token': token,
-      'chatBotAgentId': chatBotAgentId,
       'sessionId': sessionId,
-      'receiverId': receiverId,
       'agentType': agentType,
       'loginAuthorization': loginAuthorization,
       'agentId': agentId,
