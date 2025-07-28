@@ -1,6 +1,13 @@
 allprojects {
     repositories {
-        maven { url = uri("G:///mavenJar") }
+        maven {
+            url = uri("http://nexus.test.sharexm.cn/repository/xmai/")
+            setAllowInsecureProtocol(true)
+            credentials {
+                username = "xmai"                    // 账号
+                password = "C9beGFAFOxNnQQIo"         // 密码
+            }
+        }
         google()
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
