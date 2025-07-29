@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
+import org.json.JSONArray;
 
 public class AUIAICallInCallActivity extends ComponentActivity {
     private final String TAG = AUIAICallInCallActivity.class.getName();
@@ -248,15 +249,12 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         public void onCallEnd() {
             Log.i(TAG, "onCallEnd: ");
             // 主动推送到Flutter ---start
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i <mSubtitleHolder.mFullScreenSubtitleMessageList.size() ; i++) {
+                jsonArray.put(mSubtitleHolder.mFullScreenSubtitleMessageList.get(i));
+            }
             if (channel != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("resetSubtitle", false);
-                params.put("isAsrText", false);
-                params.put("end", false);
-                params.put("text", "");
-                params.put("asrSentenceId", 0);
-                params.put("isCallEnd",true);
-                channel.invokeMethod("onSubtitleUpdate", params);
+                channel.invokeMethod("onSubtitleUpdate", jsonArray.toString());
             }
             // 主动推送到Flutter ---end
         }
@@ -1130,18 +1128,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 mSubtitleItemAdapter.appendToLastSubtitle(subtitleMessageItem);
             }
             Log.i("AUIAICall", "updateSubtitle [isAsrText：" + isAsrText + ", end: " + end +", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
-            // 主动推送到Flutter ---start
-            if (channel != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("resetSubtitle", resetSubtitle);
-                params.put("isAsrText", isAsrText);
-                params.put("end", end);
-                params.put("text", text);
-                params.put("asrSentenceId", asrSentenceId);
-                params.put("isCallEnd",false);
-                channel.invokeMethod("onSubtitleUpdate", params);
-            }
-            // 主动推送到Flutter ---end
+
 
             // 更新字幕时检查是否应该自动滚动
             if(shouldSubtitleAutoScroll) {

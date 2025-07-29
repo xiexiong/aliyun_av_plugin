@@ -28,7 +28,7 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
         try {
             when (call.method) {
                 "callAgentType" -> {
-                    val rtcConfigMap = call.argument<Map<String, String>>("rtcConfigBean")
+                    val rtcConfigMap = call.arguments<Map<String, String>>()
                     if (rtcConfigMap != null) {
                         AUIAICallInCallController.initialize(appContext)
                         AUIAICallInCallController.getInstance().callAgentType(
