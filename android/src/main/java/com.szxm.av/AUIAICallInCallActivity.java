@@ -529,6 +529,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             obj.put("roomId",roomId);
             obj.put("sessionId", sessionIdStr);
             obj.put("appParam", appParam);
+            obj.put("callType",mAiAgentType);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

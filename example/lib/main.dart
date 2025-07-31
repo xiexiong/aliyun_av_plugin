@@ -1,7 +1,5 @@
-import 'package:aliyun_av_plugin/bean/rtc_config.dart';
 import 'package:aliyun_av_plugin/bean/subtitle_message.dart';
 import 'package:flutter/material.dart';
-import 'package:aliyun_av_plugin/aliyun_av_plugin.dart';
 
 void main() {
   runApp(const MyApp());
