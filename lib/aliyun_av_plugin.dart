@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:aliyun_av_plugin/bean/rtc_config.dart';
-import 'package:aliyun_av_plugin/bean/sub_message_item.dart';
 import 'package:flutter/services.dart';
 
 class AliyunAvPlugin {
@@ -21,35 +18,10 @@ class AliyunAvPlugin {
     }
   }
 
-  static void setSubtitleUpdateHandler(void Function(List<SubMessageItem>) handler) {
+  static void asynSubtitleUpdate(Function() handler) {
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'onSubtitleUpdate') {
-        try {
-          final args = call.arguments;
-          if (args is String) {
-            // args 是 json array 字符串
-            final List<dynamic> jsonList = json.decode(args);
-            final List<SubMessageItem> items =
-                jsonList
-                    .map(
-                      (e) => SubMessageItem(
-                        isAsrText: e['isAsrText'] as bool,
-                        asrSentenceId: e['asrSentenceId'] as int,
-                        receiveTime: e['receiveTime'] as int,
-                        text: e['text'] as String,
-                        displayEndTime: e['displayEndTime'] as int,
-                      ),
-                    )
-                    .toList();
-            handler(items);
-          } else {
-            // ignore: avoid_print
-            print('onSubtitleUpdate: arguments is not a JSON array string');
-          }
-        } catch (e, stack) {
-          // ignore: avoid_print
-          print('onSubtitleUpdate: error parsing arguments: $e\n$stack');
-        }
+        handler();
       }
     });
   }

@@ -32,17 +32,15 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
                     if (rtcConfigMap != null) {
                         AUIAICallInCallController.initialize(appContext)
                         AUIAICallInCallController.getInstance().callAgentType(
-                            rtcConfigMap["appId"],
-                            rtcConfigMap["appKey"],
-                            rtcConfigMap["channelId"],
                             rtcConfigMap["agentType"],
                             rtcConfigMap["agentId"],
                             rtcConfigMap["token"],
                             rtcConfigMap["userId"],
                             rtcConfigMap["loginAuthorization"],
-                            rtcConfigMap["chatBotAgentId"],
-                            rtcConfigMap["sessionId"],
-                            rtcConfigMap["receiverId"]
+                            rtcConfigMap["channelId"],
+                            rtcConfigMap["roomId"],
+                            rtcConfigMap["app_param"],
+                            rtcConfigMap["prologue"],
                         )
                         result.success(true)
                     } else {

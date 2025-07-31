@@ -18,4 +18,7 @@ public class AUIAIConstStrKey {
     public static final String BUNDLE_CHAT_BOT_AGENT_ID = "BUNDLE_CHAT_BOT_AGENT_ID";
     public static final String BUNDLE_SESSION_ID = "BUNDLE_SESSION_ID";
     public static final String BUNDLE_RECEIVER_ID = "BUNDLE_RECEIVER_ID";
+    public static final String BUNDLE_ROOM_ID = "BUNDLE_ROOM_ID";
+    public static final String BUNDLE_APP_PARAM = "BUNDLE_APP_PARAM";
+    public static final String BUNDLE_PROLOGUR = "BUNDLE_PROLOGUR";
 }
