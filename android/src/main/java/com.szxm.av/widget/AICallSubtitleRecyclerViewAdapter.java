@@ -46,9 +46,9 @@ public class AICallSubtitleRecyclerViewAdapter extends RecyclerView.Adapter<AICa
 
         // 根据消息为AI的消息或者用户的消息设置不同的颜色
         if (subtitleMessageItem.isAsrText()) {
-            holder.mTvSubtitleItem.setTextColor(ContextCompat.getColor(mContext, R.color.color_1A1A1A));
-        } else {
             holder.mTvSubtitleItem.setTextColor(ContextCompat.getColor(mContext, R.color.color_51565F));
+        } else {
+            holder.mTvSubtitleItem.setTextColor(ContextCompat.getColor(mContext, R.color.color_1A1A1A));
         }
     }
 
@@ -61,6 +61,7 @@ public class AICallSubtitleRecyclerViewAdapter extends RecyclerView.Adapter<AICa
     public void addSubtitleItem(AICallSubtitleMessageItem subtitleMessageItem) {
         mSubtitleMessageItemList.add(subtitleMessageItem);
         notifyItemInserted(mSubtitleMessageItemList.size() - 1);
+
     }
 
     // 追加更新一条字幕记录
@@ -99,4 +100,6 @@ public class AICallSubtitleRecyclerViewAdapter extends RecyclerView.Adapter<AICa
             mTvSubtitleItem = itemView.findViewById(R.id.tv_subtitle_item_content);
         }
     }
+
+
 }

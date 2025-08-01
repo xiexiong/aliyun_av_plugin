@@ -1226,7 +1226,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             isOpenMuted = isMuted;
             if (isMuted) {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivMuteCall.setImageResource(R.drawable.blur_voice_open);
+                    ivMuteCall.setImageResource(R.drawable.ic_voice_mute);
                 }else {
                     ivMuteCall.setImageResource(R.drawable.ic_voice_mute);
                 }
@@ -1236,7 +1236,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 tvCallMicrophone.setText(R.string.microphone_open);
             } else {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivMuteCall.setImageResource(R.drawable.blur_voice_close);
+                    ivMuteCall.setImageResource(R.drawable.ic_voice_open);
                     tvCallMicrophone.setTextColor(getResources().getColor(R.color.white));
                 }else {
                     ivMuteCall.setImageResource(R.drawable.ic_voice_open);
@@ -1267,13 +1267,13 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             isSpeakerstats = isSpeakerOn;
             if (isSpeakerstats) {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivSpeaker.setImageResource(R.drawable.blur_speck_open);
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
                 }else {
                     ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
                 }
             } else {
                 if (isOpenCamera && mAiAgentType == VisionAgent){
-                    ivSpeaker.setImageResource(R.drawable.blur_speak_close);
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
                 }else {
                     ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
                 }
@@ -1396,16 +1396,16 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 tvCamera.setText(R.string.camera_off);
             } else {
                 isOpenCamera = true;
-                ivCamera.setImageResource(R.drawable.blur_video_open);
+                ivCamera.setImageResource(R.drawable.ic_camera_preview_on);
                 if (isOpenMuted){
-                    ivMuteCall.setImageResource(R.drawable.blur_voice_open);
+                    ivMuteCall.setImageResource(R.drawable.ic_voice_mute);
                 }else{
-                    ivMuteCall.setImageResource(R.drawable.blur_voice_close);
+                    ivMuteCall.setImageResource(R.drawable.ic_voice_open);
                 }
                 if (isSpeakerstats){
-                    ivSpeaker.setImageResource(R.drawable.blur_speck_open);
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
                 }else{
-                    ivSpeaker.setImageResource(R.drawable.blur_speak_close);
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
                 }
                 setTypeWhite();
                 tvCamera.setText(R.string.camera_on);
