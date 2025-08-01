@@ -13,8 +13,7 @@ class RtcConfig {
   final String? videoInstanceId;
   final String? voiceToken;
   final String? videoToken;
-  String? roomId;
-  final String? app_param;
+  final String? userData;
   final String? prologue;
 
   RtcConfig({
@@ -31,8 +30,7 @@ class RtcConfig {
     this.videoInstanceId,
     this.voiceToken,
     this.videoToken,
-    required this.roomId,
-    required this.app_param,
+    required this.userData,
     required this.prologue,
   });
 
@@ -52,8 +50,7 @@ class RtcConfig {
       videoInstanceId: map['videoInstanceId'] ?? '',
       voiceToken: map['voiceToken'] ?? '',
       videoToken: map['videoToken'] ?? '',
-      roomId: map['roomId'] ?? '',
-      app_param: map['app_param'] ?? '',
+      userData: map['userData'] ?? '',
       prologue: map['prologue'] ?? '',
     );
   }
@@ -74,8 +71,7 @@ class RtcConfig {
       'videoInstanceId': videoInstanceId,
       'voiceToken': voiceToken,
       'videoToken': videoToken,
-      'roomId': roomId,
-      'app_param': app_param,
+      'userData': userData,
       'prologue': prologue,
     };
   }

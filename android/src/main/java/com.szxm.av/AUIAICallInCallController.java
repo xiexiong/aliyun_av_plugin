@@ -54,7 +54,7 @@ public class AUIAICallInCallController {
     //     appContext.startActivity(intent);
     // }
 
-    public void callAgentType(String agentType,String agentId,String rtcToken,String userid,String loginAuthorization,String channelId,String roomId,String appParam,String prologue) {
+    public void callAgentType(String agentType,String agentId,String rtcToken,String userid,String loginAuthorization,String sessionId,String userData,String prologue) {
         ARTCAICallEngine.ARTCAICallAgentType agentEnumType = null;
         if (agentType.equals("VisionAgent")){
             agentEnumType = ARTCAICallEngine.ARTCAICallAgentType.VisionAgent;
@@ -68,8 +68,8 @@ public class AUIAICallInCallController {
         intent.putExtra(AUIAIConstStrKey.BUNDLE_KEY_RTC_AUTH_TOKEN, rtcToken);
         intent.putExtra(AUIAIConstStrKey.BUNDLE_KEY_LOGIN_USER_ID, userid);
         intent.putExtra(AUIAIConstStrKey.BUNDLE_KEY_LOGIN_AUTHORIZATION, loginAuthorization);
-        intent.putExtra(AUIAIConstStrKey.BUNDLE_ROOM_ID, roomId);
-        intent.putExtra(AUIAIConstStrKey.BUNDLE_APP_PARAM, appParam);
+        intent.putExtra(AUIAIConstStrKey.BUNDLE_SESSION_ID, sessionId);
+        intent.putExtra(AUIAIConstStrKey.BUNDLE_USERDATA, userData);
         intent.putExtra(AUIAIConstStrKey.BUNDLE_PROLOGUR, prologue);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         appContext.startActivity(intent);
