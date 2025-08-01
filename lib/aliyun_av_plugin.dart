@@ -1,5 +1,4 @@
 import 'package:aliyun_av_plugin/bean/rtc_config.dart';
-import 'package:aliyun_av_plugin/bean/subtitle_message.dart';
 import 'package:flutter/services.dart';
 
 class AliyunAvPlugin {
@@ -19,22 +18,10 @@ class AliyunAvPlugin {
     }
   }
 
-  static void setSubtitleUpdateHandler(void Function(SubtitleMessage) handler) {
+  static void asynSubtitleUpdate(Function() handler) {
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'onSubtitleUpdate') {
-        try {
-          final args = call.arguments;
-          if (args is Map) {
-            final msg = SubtitleMessage.fromMap(Map<String, dynamic>.from(args));
-            handler(msg);
-          } else {
-            // ignore: avoid_print
-            print('onSubtitleUpdate: arguments is not a Map');
-          }
-        } catch (e) {
-          // ignore: avoid_print
-          print('onSubtitleUpdate: error parsing arguments: $e');
-        }
+        handler();
       }
     });
   }

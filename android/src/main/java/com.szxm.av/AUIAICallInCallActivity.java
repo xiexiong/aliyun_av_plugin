@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
+import org.json.JSONArray;
 
 public class AUIAICallInCallActivity extends ComponentActivity {
     private final String TAG = AUIAICallInCallActivity.class.getName();
@@ -97,6 +98,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
     private boolean mIsSharedAgent = false;
     private boolean mIsPushToTalkMode = false;
     private boolean mIsVoicePrintRecognized = false;
+    private boolean isSpeakerstats = true;
 
     private SubtitleHolder mSubtitleHolder = null;
     private boolean mIsFullScreenSubtitleOpen = false;
@@ -248,15 +250,12 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         public void onCallEnd() {
             Log.i(TAG, "onCallEnd: ");
             // 主动推送到Flutter ---start
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i <mSubtitleHolder.mFullScreenSubtitleMessageList.size() ; i++) {
+                jsonArray.put(mSubtitleHolder.mFullScreenSubtitleMessageList.get(i));
+            }
             if (channel != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("resetSubtitle", false);
-                params.put("isAsrText", false);
-                params.put("end", false);
-                params.put("text", "");
-                params.put("asrSentenceId", 0);
-                params.put("isCallEnd",true);
-                channel.invokeMethod("onSubtitleUpdate", params);
+                channel.invokeMethod("onSubtitleUpdate", jsonArray.toString());
             }
             // 主动推送到Flutter ---end
         }
@@ -454,6 +453,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
 
         String aiAgentRegion = null;
         String aiAgentId = null;
+        String sessionIdStr = null;
         mAiAgentType = ARTCAICallEngine.ARTCAICallAgentType.VoiceAgent;
         String loginUserId = null;
         String loginAuthorization = null;
@@ -461,6 +461,9 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         String chatBotAgentId = null;
         String sessionId = null;
         String receiverId = null;
+        String roomId = null;
+        String appParam = null;
+        String prologue = null;
         if (null != getIntent() && null != getIntent().getExtras()) {
             aiAgentRegion = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_REGION, null);
             aiAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_ID, null);
@@ -472,6 +475,10 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             chatBotAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_CHAT_BOT_AGENT_ID, null);
             sessionId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_SESSION_ID, null);
             receiverId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_RECEIVER_ID, null);
+            roomId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_ROOM_ID, null);
+            appParam = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_APP_PARAM, null);
+            prologue = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_PROLOGUR, null);
+            sessionIdStr = loginUserId+roomId+UUID.randomUUID().toString();
         }
 
         if(TextUtils.isEmpty(aiAgentRegion)) {
@@ -515,7 +522,18 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         mIsPushToTalkMode = SettingStorage.getInstance().getBoolean(SettingStorage.KEY_BOOT_ENABLE_PUSH_TO_TALK, SettingStorage.DEFAULT_ENABLE_PUSH_TO_TALK);
         artcaiCallConfig.agentConfig.enablePushToTalk = mIsPushToTalkMode;
         artcaiCallConfig.agentConfig.voiceprintConfig.useVoicePrint = SettingStorage.getInstance().getBoolean(SettingStorage.KEY_BOOT_ENABLE_VOICE_PRINT, SettingStorage.DEFAULT_ENABLE_VOICE_PRINT);
-        artcaiCallConfig.userData = SettingStorage.getInstance().get(SettingStorage.KEY_BOOT_USER_EXTEND_DATA);
+        // artcaiCallConfig.userData = SettingStorage.getInstance().get(SettingStorage.KEY_BOOT_USER_EXTEND_DATA);
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("userId",loginUserId);
+            obj.put("roomId",roomId);
+            obj.put("sessionId", sessionIdStr);
+            obj.put("appParam", appParam);
+            obj.put("callType",mAiAgentType);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        artcaiCallConfig.userData = obj.toString();
         artcaiCallConfig.videoConfig.useHighQualityPreview = true;
         artcaiCallConfig.videoConfig.cameraCaptureFrameRate = 15;
         // 这里frameRate设置为5，需要根据控制台上的智能体的抽帧帧率（一般为2）进行调整，最大不建议超过15fps
@@ -525,6 +543,9 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         if(mAiAgentType == ARTCAICallEngine.ARTCAICallAgentType.VideoAgent) {
             artcaiCallConfig.videoConfig.useFrontCameraDefault = true;
         }
+
+        //设置开场白
+        artcaiCallConfig.agentConfig.agentGreeting = prologue;
 
         if(false) {
             updateAgentConfig(artcaiCallConfig.agentConfig);
@@ -554,13 +575,13 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             }
         }
         //配置ARTCAICallChatSyncConfig参数
-        if(!TextUtils.isEmpty(chatBotAgentId) && !TextUtils.isEmpty(sessionId) && !TextUtils.isEmpty(receiverId)) {
+        if(!TextUtils.isEmpty(aiAgentId) && !TextUtils.isEmpty(sessionId) && !TextUtils.isEmpty(loginUserId)) {
             //关联的消息对话智能体ID
-            artcaiCallConfig.chatSyncConfig.chatBotAgentId = chatBotAgentId;
+            artcaiCallConfig.chatSyncConfig.chatBotAgentId = aiAgentId;
             //业务传入的SessionId
-            artcaiCallConfig.chatSyncConfig.sessionId = sessionId;
+            artcaiCallConfig.chatSyncConfig.sessionId = sessionIdStr;
             //用户ID，即业务系统用户唯一标识ID
-            artcaiCallConfig.chatSyncConfig.receiverId = receiverId;
+            artcaiCallConfig.chatSyncConfig.receiverId = loginUserId;
         }
 
         if(TextUtils.isEmpty(artcaiCallConfig.agentConfig.voiceprintConfig.voiceprintId)) {
@@ -1130,18 +1151,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 mSubtitleItemAdapter.appendToLastSubtitle(subtitleMessageItem);
             }
             Log.i("AUIAICall", "updateSubtitle [isAsrText：" + isAsrText + ", end: " + end +", text: " + text + ", asrSentenceId: " + asrSentenceId + "]");
-            // 主动推送到Flutter ---start
-            if (channel != null) {
-                Map<String, Object> params = new HashMap<>();
-                params.put("resetSubtitle", resetSubtitle);
-                params.put("isAsrText", isAsrText);
-                params.put("end", end);
-                params.put("text", text);
-                params.put("asrSentenceId", asrSentenceId);
-                params.put("isCallEnd",false);
-                channel.invokeMethod("onSubtitleUpdate", params);
-            }
-            // 主动推送到Flutter ---end
+
 
             // 更新字幕时检查是否应该自动滚动
             if(shouldSubtitleAutoScroll) {
@@ -1267,12 +1277,19 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             boolean isSpeakerOn = null != mARTCAICallEngine ? mARTCAICallEngine.isSpeakerOn() : true;
             ImageView ivSpeaker = (ImageView) mActionLayer.findViewById(R.id.iv_speaker);
             TextView tvSpeaker = (TextView) mActionLayer.findViewById(R.id.tv_speaker);
-            if (isSpeakerOn) {
-                ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
-                tvSpeaker.setText(R.string.speaker_on);
+            isSpeakerstats = isSpeakerOn;
+            if (isSpeakerstats) {
+                if (isOpenCamera && mAiAgentType == VisionAgent){
+                    ivSpeaker.setImageResource(R.drawable.blur_speck_open);
+                }else {
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
+                }
             } else {
-                ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
-                tvSpeaker.setText(R.string.speaker_on);
+                if (isOpenCamera && mAiAgentType == VisionAgent){
+                    ivSpeaker.setImageResource(R.drawable.blur_speak_close);
+                }else {
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
+                }
             }
         }
 
@@ -1369,8 +1386,10 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 }
             });
         }
+
         protected void updateCameraButtonUI(boolean isCameraMute) {
             ImageView ivCamera = (ImageView) mActionLayer.findViewById(R.id.iv_camera);
+            ImageView ivSpeaker = (ImageView) mActionLayer.findViewById(R.id.iv_speaker);
             ImageView ivMuteCall = (ImageView) mActionLayer.findViewById(R.id.iv_mute_call);
             TextView tvCamera = (TextView) mActionLayer.findViewById(R.id.tv_camera);
             if (isCameraMute) {
@@ -1381,6 +1400,11 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                 }else{
                     ivMuteCall.setImageResource(R.drawable.ic_voice_open);
                 }
+                if (isSpeakerstats){
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_on);
+                }else{
+                    ivSpeaker.setImageResource(R.drawable.ic_speaker_off);
+                }
                 setType51565F();
                 tvCamera.setText(R.string.camera_off);
             } else {
@@ -1390,6 +1414,11 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                     ivMuteCall.setImageResource(R.drawable.blur_voice_open);
                 }else{
                     ivMuteCall.setImageResource(R.drawable.blur_voice_close);
+                }
+                if (isSpeakerstats){
+                    ivSpeaker.setImageResource(R.drawable.blur_speck_open);
+                }else{
+                    ivSpeaker.setImageResource(R.drawable.blur_speak_close);
                 }
                 setTypeWhite();
                 tvCamera.setText(R.string.camera_on);

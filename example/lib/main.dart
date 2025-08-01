@@ -1,7 +1,7 @@
+import 'package:aliyun_av_plugin/aliyun_av_plugin.dart';
 import 'package:aliyun_av_plugin/bean/rtc_config.dart';
 import 'package:aliyun_av_plugin/bean/subtitle_message.dart';
 import 'package:flutter/material.dart';
-import 'package:aliyun_av_plugin/aliyun_av_plugin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // ignore: unused_field
   SubtitleMessage? _subtitle;
 
   @override
@@ -59,9 +60,7 @@ RtcConfig _getRtcConfig(bool isVoice) {
     channelId: 'V${DateTime.now().millisecondsSinceEpoch}',
     userId: 'V123456',
     token: '',
-    chatBotAgentId: '',
     sessionId: '',
-    receiverId: '',
     agentType: isVoice ? 'VoiceAgent' : 'VisionAgent',
     loginAuthorization: 'Vabcdefg123456789',
     agentId: isVoice ? 'f05abdde9e5648efb966c3cb46361c5a' : '47b870aa48cc49d1b43485042c6ddcf5',

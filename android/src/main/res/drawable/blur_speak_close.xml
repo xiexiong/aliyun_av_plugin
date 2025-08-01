@@ -6,15 +6,13 @@
                 android:startColor="#66FFFFFF"
                 android:endColor="#66FFFFFF"
                 android:angle="0"
-                android:type="radial"
-                android:gradientRadius="180%"/>
+                android:type="linear"/>
             <corners android:radius="@dimen/dp_100" />
             <solid android:color="#66FFFFFF" android:alpha="0.4" />
         </shape>
     </item>
-    <item android:gravity="center"
-        android:padding="@dimen/dp_20">
+    <item android:gravity="center">
         <bitmap
-            android:src="@drawable/ic_camera_preview_on_white"/>
+            android:src="@drawable/ic_speck_close"/>
     </item>
 </layer-list>

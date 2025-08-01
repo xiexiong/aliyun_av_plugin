@@ -50,11 +50,8 @@ android {
     dependencies {
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
-        implementation 'com.aliyun:artcaiclllkit:1.0.0'
-        implementation 'com.aliyun:alivcsdk_artc:1.0.0'
         implementation 'com.squareup.okhttp3:okhttp:4.10.0'
         implementation 'com.orhanobut:dialogplus:1.11'
-        implementation 'com.base.recycler:adapter_helper:1.0.0'
         implementation 'androidx.recyclerview:recyclerview:1.3.2'
         implementation 'io.noties.markwon:core:4.6.2'
         implementation 'io.noties.markwon:image:4.6.2'
@@ -62,9 +59,12 @@ android {
         implementation 'io.github.scwang90:refresh-layout-kernel:2.1.0'
         implementation 'io.github.scwang90:refresh-header-classics:2.1.0'
         implementation 'io.github.scwang90:refresh-footer-classics:2.1.0'
-        implementation 'com.airbnb.mjar:lottie:1.0.0'
         implementation 'androidx.appcompat:appcompat:1.6.1'
         implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+        implementation 'com.yofo.xmai:ArtcaiClllKit:1.0.1'
+        implementation 'com.yofo.xmai:AlivcsdkArtc:1.0.1'
+        implementation 'com.yofo.xmai:AdapterHelper:1.0.1'
+        implementation 'com.yofo.xmai:lottie:1.0.1'
     }
 
     testOptions {
