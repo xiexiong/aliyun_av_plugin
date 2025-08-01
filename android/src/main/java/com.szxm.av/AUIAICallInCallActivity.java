@@ -453,7 +453,6 @@ public class AUIAICallInCallActivity extends ComponentActivity {
 
         String aiAgentRegion = null;
         String aiAgentId = null;
-        String sessionIdStr = null;
         mAiAgentType = ARTCAICallEngine.ARTCAICallAgentType.VoiceAgent;
         String loginUserId = null;
         String loginAuthorization = null;
@@ -461,24 +460,22 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         String chatBotAgentId = null;
         String sessionId = null;
         String receiverId = null;
-        String roomId = null;
-        String appParam = null;
+        String userDataJson = null;
         String prologue = null;
         if (null != getIntent() && null != getIntent().getExtras()) {
             aiAgentRegion = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_REGION, null);
-            aiAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_ID, null);
-            mAiAgentType = (ARTCAICallEngine.ARTCAICallAgentType) getIntent().getExtras().getSerializable(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_TYPE);
             mIsSharedAgent =  getIntent().getExtras().getBoolean(AUIAIConstStrKey.BUNDLE_KEY_IS_SHARED_AGENT, false);
+            chatBotAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_CHAT_BOT_AGENT_ID, null);
+            mAiAgentType = (ARTCAICallEngine.ARTCAICallAgentType) getIntent().getExtras().getSerializable(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_TYPE);
+            aiAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_AI_AGENT_ID, null);
             rtcAuthToken = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_RTC_AUTH_TOKEN, null);
             loginUserId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_LOGIN_USER_ID, null);
             loginAuthorization = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_KEY_LOGIN_AUTHORIZATION, null);
-            chatBotAgentId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_CHAT_BOT_AGENT_ID, null);
             sessionId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_SESSION_ID, null);
             receiverId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_RECEIVER_ID, null);
-            roomId = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_ROOM_ID, null);
-            appParam = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_APP_PARAM, null);
+            userDataJson = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_USERDATA, null);
             prologue = getIntent().getExtras().getString(AUIAIConstStrKey.BUNDLE_PROLOGUR, null);
-            sessionIdStr = loginUserId+roomId+UUID.randomUUID().toString();
+            Log.i(TAG, "onCreate: "+userDataJson);
         }
 
         if(TextUtils.isEmpty(aiAgentRegion)) {
@@ -523,17 +520,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
         artcaiCallConfig.agentConfig.enablePushToTalk = mIsPushToTalkMode;
         artcaiCallConfig.agentConfig.voiceprintConfig.useVoicePrint = SettingStorage.getInstance().getBoolean(SettingStorage.KEY_BOOT_ENABLE_VOICE_PRINT, SettingStorage.DEFAULT_ENABLE_VOICE_PRINT);
         // artcaiCallConfig.userData = SettingStorage.getInstance().get(SettingStorage.KEY_BOOT_USER_EXTEND_DATA);
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("userId",loginUserId);
-            obj.put("roomId",roomId);
-            obj.put("sessionId", sessionIdStr);
-            obj.put("appParam", appParam);
-            obj.put("callType",mAiAgentType);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        artcaiCallConfig.userData = obj.toString();
+        artcaiCallConfig.userData = userDataJson;
         artcaiCallConfig.videoConfig.useHighQualityPreview = true;
         artcaiCallConfig.videoConfig.cameraCaptureFrameRate = 15;
         // 这里frameRate设置为5，需要根据控制台上的智能体的抽帧帧率（一般为2）进行调整，最大不建议超过15fps
@@ -579,7 +566,7 @@ public class AUIAICallInCallActivity extends ComponentActivity {
             //关联的消息对话智能体ID
             artcaiCallConfig.chatSyncConfig.chatBotAgentId = aiAgentId;
             //业务传入的SessionId
-            artcaiCallConfig.chatSyncConfig.sessionId = sessionIdStr;
+            artcaiCallConfig.chatSyncConfig.sessionId = sessionId;
             //用户ID，即业务系统用户唯一标识ID
             artcaiCallConfig.chatSyncConfig.receiverId = loginUserId;
         }

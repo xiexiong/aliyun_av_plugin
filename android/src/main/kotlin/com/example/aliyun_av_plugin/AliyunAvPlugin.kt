@@ -37,9 +37,8 @@ class AliyunAvPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityA
                             rtcConfigMap["token"],
                             rtcConfigMap["userId"],
                             rtcConfigMap["loginAuthorization"],
-                            rtcConfigMap["channelId"],
-                            rtcConfigMap["roomId"],
-                            rtcConfigMap["app_param"],
+                            rtcConfigMap["sessionId"],
+                            rtcConfigMap["userData"],
                             rtcConfigMap["prologue"],
                         )
                         result.success(true)
