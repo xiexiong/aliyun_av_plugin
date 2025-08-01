@@ -53,17 +53,45 @@ class _MyAppState extends State<MyApp> {
 }
 
 RtcConfig _getRtcConfig(bool isVoice) {
+  // return RtcConfig(
+  //   appId:
+  //       isVoice ? '28383372-04d8-4edd-b629-cf80c3bf2ec9' : 'd858f7bd-196d-45b8-88cd-3e8e9e72094f',
+  //   appKey: isVoice ? '7523e3057a76a46cf1325a54ac493fdb' : '19e1007f8a1c06ed234a0f374786c77f',
+  //   channelId: 'V${DateTime.now().millisecondsSinceEpoch}',
+  //   userId: 'V123456',
+  //   token: '',
+  //   sessionId: '',
+  //   agentType: isVoice ? 'VoiceAgent' : 'VisionAgent',
+  //   loginAuthorization: 'Vabcdefg123456789',
+  //   agentId: isVoice ? 'f05abdde9e5648efb966c3cb46361c5a' : '47b870aa48cc49d1b43485042c6ddcf5',
+  // );
+
+  final userId = 'V123456';
+  final sessionIdStr = 'xxx';
+  final callType = isVoice ? 'VoiceAgent' : 'VisionAgent';
+
+  // 构建 userData 字段
+  final userData = {
+    'userId': userId,
+    'roomId': "7",
+    'sessionId': sessionIdStr,
+    'appParam': {
+      "openToken": "11212sds",
+      "appKey": "GAB3gEpJZNJB6__-mnMtUt==",
+      "serviceId": "sasad2q323wsddsdsdsddssdsddsds",
+    },
+    'callType': callType,
+  };
+
   return RtcConfig(
-    appId:
-        isVoice ? '28383372-04d8-4edd-b629-cf80c3bf2ec9' : 'd858f7bd-196d-45b8-88cd-3e8e9e72094f',
-    appKey: isVoice ? '7523e3057a76a46cf1325a54ac493fdb' : '19e1007f8a1c06ed234a0f374786c77f',
-    channelId: 'V${DateTime.now().millisecondsSinceEpoch}',
-    userId: 'V123456',
+    agentType: callType,
+    agentId: '',
     token: '',
-    sessionId: '',
-    agentType: isVoice ? 'VoiceAgent' : 'VisionAgent',
-    loginAuthorization: 'Vabcdefg123456789',
-    agentId: isVoice ? 'f05abdde9e5648efb966c3cb46361c5a' : '47b870aa48cc49d1b43485042c6ddcf5',
+    userId: userId,
+    loginAuthorization: '',
+    sessionId: sessionIdStr,
+    prologue: '',
+    userData: userData.toString(),
   );
 }
 
