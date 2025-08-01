@@ -35,9 +35,9 @@
 "Call Failed, Unknow Error" = "通话失败，发生未知错误";
 "Call Failed, Subscription Required" = "接通失败，请检查您账号是否正确订购套餐";
 "Call Failed, Agent Not Found" = "接通失败，请检查智能体ID是否正确";
-"You Talk, I'm Listening..." = "正在听";
+"You Talk, I'm Listening..." = "你说，我在听";
 "Thinking..." = "思考中...";
-"I'm Replying, Tap Screen or Speak to Interrupt Me" = "说话或点击打断";
+"I'm Replying, Tap Screen or Speak to Interrupt Me" = "我正在回复中，可以轻触屏幕或说话打断我";
 "I'm Replying, Tap Screen to Interrupt Me" = "我正在回复中，可以轻触屏幕打断我";
 "Hang Up" = "挂断";
 "Mute" = "静音";

@@ -317,7 +317,7 @@ import PhotosUI
             return
         }
         let chatSyncConfig = ARTCAICallChatSyncConfig(sessionId: self.sessionId, agentId: self.engine.agentInfo?.agentId ?? "", receiverId: self.engine.userInfo?.userId ?? "")
-        AUIAICallManager.defaultManager.startCall(agentType: agentType, chatSyncConfig: chatSyncConfig)
+//        AUIAICallManager.defaultManager.startCall(agentType: agentType, chatSyncConfig: chatSyncConfig)
     }
     
     private func deleteMessage(item: AUIAIChatMessageItem) {

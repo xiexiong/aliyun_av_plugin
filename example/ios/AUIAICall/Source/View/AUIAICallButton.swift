@@ -14,7 +14,8 @@ import AUIFoundation
         self.isSelected = false
         super.init(frame: frame)
         
-        self.addSubview(self.imageView)
+        self.addSubview(self.imageBgView)
+        self.imageBgView.addSubview(self.imageView)
         self.isSelected = false
         
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTapped)))
@@ -30,14 +31,25 @@ import AUIFoundation
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-       
-        self.imageView.av_size = CGSize(width: 70, height: 70)
-        self.imageView.center = CGPoint(x: self.av_width / 2.0, y: self.av_height / 2.0)
+        
+        let iconWidth = self.av_width
+        let iconHeight = iconWidth
+        
+        var iconCorner = iconHeight / 2.0
+        if self.iconCorner != CGFloat.leastNormalMagnitude {
+            iconCorner = self.iconCorner
+        }
+        
+        self.imageBgView.frame = CGRect(x: (self.av_width - iconWidth) / 2.0, y: 0, width: iconWidth, height: iconWidth)
+        self.imageBgView.layer.cornerRadius = iconCorner
+        self.imageBgView.layer.masksToBounds = true
+        self.imageView.av_size = CGSize(width: iconHeight - self.iconMargin * 2, height: iconHeight - self.iconMargin * 2)
+        self.imageView.center = CGPoint(x: iconWidth / 2.0, y: iconHeight / 2.0)
     }
     
     open var iconLength: CGFloat = CGFloat.leastNormalMagnitude
     open var iconCorner: CGFloat = CGFloat.leastNormalMagnitude
-    open var iconMargin: CGFloat = 12.0
+    open var iconMargin: CGFloat = 15.0
     open var normalBgColor: UIColor? = nil
     open var selectedBgColor: UIColor? = nil
     
@@ -49,6 +61,7 @@ import AUIFoundation
         didSet {
             self.imageBgView.backgroundColor = self.isSelected ? self.selectedBgColor : self.normalBgColor
             self.imageView.image = self.isSelected ? self.selectedImage : self.normalImage
+            self.titleLabel.text = self.isSelected ? self.selectedTitle : self.normalTitle
             self.setNeedsLayout()
         }
     }

@@ -39,7 +39,7 @@ import AUIFoundation
     }
     
     open var danger_strong: UIColor {
-        return UIColor.av_color(withHexString: "F53F3FFF")
+        return UIColor.av_color(withHexString: "#FF6335FF")
     }
     
     open var success_ultrastrong: UIColor {

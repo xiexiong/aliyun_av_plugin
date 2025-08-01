@@ -267,11 +267,11 @@ public let AUIAIMainBundle = AUIAICallTheme("AUIAIMain")
     open func startCall(agentType: ARTCAICallAgentType, agentId: String? = nil, region: String? = nil) {
         if agentType == .AvatarAgent || agentType == .VideoAgent {
             let seconds: UInt32 = 5 * 60
-            AUIAICallManager.defaultManager.startCall(agentType: agentType, agentId: agentId, region: region, limitSecond: seconds, viewController: self)
+//            AUIAICallManager.defaultManager.startCall(agentType: agentType, agentId: agentId, region: region, limitSecond: seconds, viewController: self)
             return
         }
         
-        AUIAICallManager.defaultManager.startCall(agentType: agentType, agentId: agentId, region: region, viewController: self)
+//        AUIAICallManager.defaultManager.startCall(agentType: agentType, agentId: agentId, region: region, viewController: self)
     }
     
     open func startChat(agentId: String? = nil) {

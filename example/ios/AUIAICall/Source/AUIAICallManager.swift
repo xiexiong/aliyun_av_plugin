@@ -50,9 +50,10 @@ import ARTCAICallKit
         }
     }
     
-    private func getDefaultCallAgentConfig() -> ARTCAICallAgentConfig {
+    private func getDefaultCallAgentConfig(greeting: String? = nil) -> ARTCAICallAgentConfig {
         let agentConfig = ARTCAICallAgentConfig()
         agentConfig.voiceprintConfig.voiceprintId = self.voiceprintId
+        agentConfig.agentGreeting = greeting
         return agentConfig
     }
     
@@ -78,33 +79,44 @@ import ARTCAICallKit
     }
 
     // 通过指定agentType发起通话
-    open func startCall(agentType: ARTCAICallAgentType, agentId: String? = nil, chatSyncConfig: ARTCAICallChatSyncConfig? = nil, region: String? = nil, limitSecond: UInt32 = 0, viewController: UIViewController? = nil) {
+    open func startCall(callArgs: Dictionary<String,Any>, agentId: String? = nil, chatSyncConfig: ARTCAICallChatSyncConfig? = nil, region: String? = nil, limitSecond: UInt32 = 0, viewController: UIViewController? = nil, handupCallback: (() -> Void)? = nil) {
         
         if self.userId == nil {
             self.userId = NSString.av_random()
         }
+        let agentType: ARTCAICallAgentType =  callArgs["agentType"] as! String == "VisionAgent" ? .VisionAgent : .VoiceAgent
+        let agentId: String = callArgs["agentId"] as! String
+        let token: String = callArgs["token"] as! String
+        let userId: String = callArgs["userId"] as! String
+        let loginAuthorization: String = callArgs["loginAuthorization"] as! String
+        let sessionId: String = callArgs["sessionId"] as! String
+        let userData: String = callArgs["userData"] as! String
+        let prologue: String = callArgs["prologue"] as! String
+        let limit = callArgs["limitSecond"] ?? limitSecond
         
         self.checkDeviceAuth(agentType: agentType) { [weak self] in
             guard let self = self else {return}
             
             let topVC = viewController ?? UIViewController.av_top()
             // userId推荐使用你的App登录后的用户id
-            let userId = self.userId!
             let controller = AUIAICallController(userId: userId)
-            
+            controller.handupCallback = handupCallback
             // 设置智能体Id
-            controller.config.agentId = agentId ?? AUIAICallAgentConfig.shared.getAgentID(agentType: agentType)
+            controller.config.agentId = agentId
+            // 用户入会 token
+            controller.config.userJoinToken = token
             // 设置通话的类型（语音、数字人或视觉理解），如果设置AgentId则需要与AgentId的类型对应，否则appserver根据agentType选择对应的agentId启动通话
             controller.config.agentType = agentType
             // 关联的chat智能体配置(必须同一账号同一区域上)，如果设置了，那么在通话过程中会把通话记录同步到chat智能体上
-            controller.config.chatSyncConfig = chatSyncConfig
+            controller.config.chatSyncConfig = ARTCAICallChatSyncConfig(sessionId: sessionId,agentId: agentId,receiverId: userId)
             // 通话配置
-            controller.config.agentConfig = self.getDefaultCallAgentConfig()
+            controller.config.agentConfig = self.getDefaultCallAgentConfig(greeting: prologue)
             // agent所在的区域
             controller.config.region = region ?? AUIAICallAgentConfig.shared.getRegion()
+            // 自定义数据
+            controller.config.userData = JSONUtils.jsonToMap(jsonString: userData)
             // 通话时长限制，如无限制则无需设置
-            controller.config.limitSecond = limitSecond
-            
+            controller.config.limitSecond = limit as! UInt32
             // 创建通话ViewController
             let vc = AUIAICallViewController(controller)
             // AppServer的Token失效回调

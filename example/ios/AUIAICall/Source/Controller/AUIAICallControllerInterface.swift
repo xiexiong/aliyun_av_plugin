@@ -26,7 +26,7 @@ import ARTCAICallKit
     open var region: String? = nil                 // 智能体服务所在的区域
     open var agentConfig: ARTCAICallAgentConfig!              // 智能体启动配置，该信息最终传给智能体
     open var userData: [String: Any]? = nil                   // 用户自定义信息，该信息最终传给智能体
-
+    open var userJoinToken: String? = nil          // 当前用户的入会Token
     open var chatSyncConfig: ARTCAICallChatSyncConfig? = nil  // 关联的chat智能体配置，如果设置了，那么在通话过程中会把通话记录同步到chat智能体上
     
     // =================== 端侧设备控制能力 ====================================

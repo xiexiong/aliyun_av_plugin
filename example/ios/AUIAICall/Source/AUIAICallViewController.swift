@@ -40,19 +40,19 @@ import ARTCAICallKit
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-          
+        
+        self.backgroundView.frame = self.view.frame;
         self.callContentView.frame = self.view.bounds
         self.callContentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onContentViewClicked(recognizer:))))
-
-        self.backgroundView.frame = self.view.frame;
+        
+       
         
 #if AICALL_ENABLE_FEEDBACK
         self.reportBtn = self.setupReportBtn()
 #endif
         
-//        self.settingBtn.frame = CGRect(x: self.view.av_width - 6 - 44, y: UIView.av_safeTop, width: 44, height: 44)
-        
         self.subtitleBtn.frame = CGRect(x: self.view.av_width - 56 - 32, y: UIView.av_safeTop + 6, width: 56, height: 32)
+        self.switchCameraBtn.frame = CGRect(x: self.subtitleBtn.frame.origin.x - 12 - 32, y: UIView.av_safeTop + 6, width: 32, height: 32)
         self.subtitleListView.frame = self.view.bounds
         
 //        self.titleLabel.sizeToFit()
@@ -167,20 +167,34 @@ import ARTCAICallKit
         let btn = AVBlockButton()
         btn.setTitle(AUIAICallBundle.getString("Subtitles"), for: .normal)
         btn.titleLabel?.font = AVTheme.mediumFont(16)
-        btn.setBackgroundColor(UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4), for: .normal)
-//        btn.setBackgroundColor(AVTheme.fill_infrared, for: .selected)
-        btn.setTitleColor(UIColor(red: 81/255, green: 86/255, blue: 95/255, alpha: 1), for: .normal)
-//        btn.setTitleColor(AVTheme.text_infrared, for: .selected)
+        btn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.24)
+        btn.setTitleColor(.white, for: .normal)
         btn.addTarget(self, action: #selector(onSubtitleBtnClicked), for: .touchUpInside)
         btn.layer.cornerRadius = 16
         btn.layer.masksToBounds = true
-//        btn.contentEdgeInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
+        self.view.addSubview(btn)
+        return btn
+    }()
+    
+    lazy var switchCameraBtn: AVBlockButton = {
+        let btn = AVBlockButton()
+        btn.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        btn.setImage(AUIAICallBundle.getCommonImage("cs_switch_camera"), for: .normal)
+        btn.isHidden = self.controller.config.agentType == .VoiceAgent
+        btn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.24)
+        btn.layer.cornerRadius = 16
+        btn.layer.masksToBounds = true
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = btn.bounds
+//        blurView.alpha = 0.8
+//        btn.insertSubview(blurView, at: 0) // 将模糊视图作为底层背景
         self.view.addSubview(btn)
         return btn
     }()
     
     open lazy var subtitleListView: AUIAICallSubtitleListView = {
-        let view = AUIAICallSubtitleListView(frame: self.view.bounds)
+        let view = AUIAICallSubtitleListView(frame: self.view.bounds, agentType: self.controller.config.agentType)
         view.contentInset = UIEdgeInsets(top: UIView.av_safeTop + 65, left: 0, bottom: UIView.av_safeBottom + 221, right: 0)
         return view
     }()
@@ -208,16 +222,15 @@ import ARTCAICallKit
         view.muteAudioBtn.tappedAction = { [weak self] btn in
             self?.controller.muteMicrophone(mute: !btn.isSelected)
             btn.isSelected = self?.controller.config.muteMicrophone == true
-            if (btn.isSelected) {
-                view.tipsLabel.text = "麦克风已禁用"
-            }
         }
         view.muteCameraBtn.tappedAction = { [weak self] btn in
             self?.controller.muteLocalCamera(mute: !btn.isSelected)
             btn.isSelected = self?.controller.config.muteLocalCamera == true
-            self?.callContentView.cameraView?.isMute = btn.isSelected
+            self?.switchCameraBtn.isHidden = btn.isSelected
+            self?.callContentView.cameraView?.isHidden = btn.isSelected
+            self?.callContentView.avatarView.isHidden = !btn.isSelected || self?.subtitleBtn.isSelected ?? false
         }
-        view.switchCameraBtn.clickBlock = { [weak self] btn in
+        switchCameraBtn.clickBlock = { [weak self] btn in
             self?.controller.switchCamera()
         }
         view.pushToTalkBtn.longPressAction = { [weak self] btn, state, elapsed in
@@ -317,6 +330,20 @@ import ARTCAICallKit
         }
         self.voiceprintTipsLabel?.showTips()
     }
+    
+//    
+//    private func updateSubtitleStyle() {
+//        if self.subtitleBtn.isSelected {
+//            
+//        } else {
+//            
+//        }
+//    }
+    
+    
+    private func updateSublistViewStyle() {
+        
+    }
 }
 
 extension AUIAICallViewController {
@@ -324,11 +351,22 @@ extension AUIAICallViewController {
     @objc open func onSubtitleBtnClicked() {
         self.subtitleBtn.isSelected = !self.subtitleBtn.isSelected
         if self.subtitleBtn.isSelected {
-            self.view.insertSubview(self.subtitleListView, belowSubview: self.subtitleBtn)
+            self.callContentView.avatarView.isHidden = true;
+            self.subtitleBtn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.4)
+            self.view.insertSubview(self.subtitleListView, belowSubview: self.bottomView)
+            self.view.bringSubviewToFront(self.switchCameraBtn)
+            self.view.bringSubviewToFront(self.subtitleBtn)
         }
         else {
+            self.subtitleBtn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.24)
             self.subtitleListView.removeFromSuperview()
-        }
+            if self.controller.config.agentType == .VisionAgent {
+                self.callContentView.avatarView.isHidden = !self.bottomView.muteCameraBtn.isSelected;
+            } else {
+                self.callContentView.avatarView.isHidden = false;
+                
+            }
+        } 
     }
     
     @objc open func onSettingBtnClicked() {
@@ -552,9 +590,6 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
                     
                 }
             }
-            if (self.controller.config.muteMicrophone) {
-                self.bottomView.tipsLabel.text = "麦克风已禁用"
-            }
         }
         
         // 挂断处理
@@ -582,9 +617,7 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
                 self.bottomView.tipsLabel.text = AUIAICallBundle.getString("I'm Replying, Tap Screen to Interrupt Me")
             }
         }
-        if (self.controller.config.muteMicrophone) {
-            self.bottomView.tipsLabel.text = "麦克风已禁用"
-        }
+        
         self.callContentView.agentAni.updateAgentAnimator(state: self.controller.agentState)
     }
     

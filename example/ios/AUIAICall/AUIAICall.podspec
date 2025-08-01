@@ -78,8 +78,8 @@ TODO: Add long description of the pod here.
     ss.dependency 'ARTCAICallKit/Chatbot'
     ss.dependency 'MJRefresh'
     ss.dependency 'SwiftyMarkdown'
-    ss.dependency 'SDWebImage'
-    ss.dependency 'lottie-ios'
+    ss.dependency 'SDWebImage', '5.21.0'
+    ss.dependency 'lottie-ios', '4.4.1'
     ss.pod_target_xcconfig = {'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) DEMO_FOR_DEBUG AICALL_ENABLE_CHATBOT '}
   end
   

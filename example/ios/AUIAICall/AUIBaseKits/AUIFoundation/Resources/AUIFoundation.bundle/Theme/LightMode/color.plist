@@ -11,7 +11,7 @@
 	<key>text_ultrastrong</key>
 	<string>#000000FF</string>
 	<key>text_strong</key>
-	<string>#3A3D48FF</string>
+	<string>#51565FFF</string>
 	<key>text_medium</key>
 	<string>#494F61FF</string>
 	<key>text_weak</key>
@@ -35,11 +35,11 @@
 	<key>border_infrared</key>
 	<string>#E6E7ECFF</string>
 	<key>ic_strong</key>
-	<string>#23262FFF</string>
+	<string>#1A1A1AFF</string>
 	<key>ic_medium</key>
 	<string>#494F61FF</string>
 	<key>ic_weak</key>
-	<string>#747A8CFF</string>
+	<string>#51565FFF</string>
 	<key>ic_ultraweak</key>
 	<string>#E6E7ECFF</string>
 	<key>ic_press</key>
@@ -67,7 +67,7 @@
 	<key>tsp_fill_weak</key>
 	<string>#1C1D2266</string>
 	<key>tsp_fill_ultraweak</key>
-	<string>#1C1D22CC</string>
+	<string>#FFFFFF99</string>
 	<key>tsp_fill_infrared</key>
 	<string>#FCFCFD66</string>
 	<key>colourful_text_strong</key>

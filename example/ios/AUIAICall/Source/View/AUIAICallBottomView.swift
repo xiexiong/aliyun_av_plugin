@@ -23,13 +23,10 @@ import ARTCAICallKit
         
         if self.enableCamera {
             self.addSubview(self.muteCameraBtn)
-            self.addSubview(self.switchCameraBtn)
         }
         
         self.addSubview(self.pushToTalkBtn)
-        
         self.addSubview(self.timeLabel)
-        
     }
     
     public required init?(coder: NSCoder) {
@@ -47,7 +44,7 @@ import ARTCAICallKit
         }
     }
     
-    private var enableCamera: Bool {
+    public var enableCamera: Bool {
         return self.agentType == .VisionAgent || self.agentType == .VideoAgent
     }
     
@@ -61,36 +58,35 @@ import ARTCAICallKit
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        let bot = self.av_height - UIView.av_safeBottom - 30
-        self.gradientlayer.frame = self.bounds
+                
         self.statementLabel.frame = CGRect(x: 0, y:self.av_height - UIView.av_safeBottom - 18, width: self.av_width, height:18)
-        self.tipsLabel.frame = CGRect(x: 0, y:self.av_height - UIView.av_safeBottom - (46+311)/2, width: self.av_width, height:23)
+
+        let btnWidth = 70.0
+        let bot = self.av_height - UIView.av_safeBottom - 30
+        self.muteAudioBtn.av_size = CGSize(width: btnWidth, height: btnWidth)
+        self.handupBtn.av_size = CGSize(width: btnWidth, height: btnWidth)
+        self.switchSpeakerBtn.av_size = CGSize(width: btnWidth, height: btnWidth)
+        self.muteCameraBtn.av_size = CGSize(width: btnWidth, height: btnWidth)
         
-        
-        self.handupBtn.iconMargin = 5
-        self.handupBtn.av_size = CGSize(width: 70, height: 70)
         self.handupBtn.av_centerY = bot - self.handupBtn.av_height / 2.0
+        self.switchSpeakerBtn.av_centerY = bot - self.switchSpeakerBtn.av_height / 2.0
+        self.muteAudioBtn.av_centerY = bot - self.muteAudioBtn.av_height / 2.0
+        self.muteCameraBtn.av_centerY = self.handupBtn.av_centerY
         
-        // 静音
-        self.muteAudioBtn.av_size = CGSize(width: 70, height: 70)
-        self.muteAudioBtn.av_centerY = bot - self.handupBtn.av_height / 2.0
+        self.timeLabel.frame = CGRect(x: 0, y: self.handupBtn.av_top - 23 - 24, width: self.av_width, height: 23)
+        self.tipsLabel.frame = CGRect(x: 0, y: self.av_height - UIView.av_safeBottom - 23 - 311 / 2.0, width: self.av_width, height: 18)
         
-        // 通话时间
-        self.timeLabel.frame = CGRect(x: 0, y: self.handupBtn.av_top - 22 - 24, width: self.av_width, height: 22)
-        // 视觉通话
         if self.enableCamera {
+            let margin = (self.av_width - btnWidth * 4) / 5
+            self.muteAudioBtn.av_left = margin
+            self.muteCameraBtn.av_left = btnWidth + margin * 2
+            self.switchSpeakerBtn.av_left = btnWidth*2 + margin * 3
+            self.handupBtn.av_left = btnWidth * 3 + margin * 4
+        }
+        else {
             self.handupBtn.av_centerX = self.av_width / 2.0
-            self.muteAudioBtn.av_centerX = 50 + self.muteAudioBtn.av_width / 2.0
-            // 扬声器
-            self.switchSpeakerBtn.isHidden = false;
-            self.switchSpeakerBtn.iconMargin = 14
-            self.switchSpeakerBtn.av_size = CGSize(width: 70, height: 70)
-            self.switchSpeakerBtn.av_centerX = self.av_width - 50 - self.switchSpeakerBtn.av_width / 2.0
-            self.switchSpeakerBtn.av_centerY = bot - self.switchSpeakerBtn.av_height / 2.0
-        } else {
-            self.handupBtn.av_left = 60
-            self.muteAudioBtn.av_left = self.av_width - 60 - self.muteAudioBtn.av_width
-            self.switchSpeakerBtn.isHidden = true;
+            self.switchSpeakerBtn.av_centerX = self.av_width - 40 - self.switchSpeakerBtn.av_width / 2.0
+            self.muteAudioBtn.av_left = 40
         }
     }
     
@@ -104,7 +100,7 @@ import ARTCAICallKit
     
     open lazy var tipsLabel: UILabel = {
         let label = UILabel()
-        label.textColor =  UIColor(red: 81/255, green: 86/255, blue: 95/255, alpha: 1)
+        label.textColor = self.agentType == .VisionAgent ? UIColor.white : AVTheme.text_strong
         label.textAlignment = .center
         label.font = AVTheme.regularFont(15)
         label.text = ""
@@ -112,37 +108,36 @@ import ARTCAICallKit
     }()
     
     open lazy var statementLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = AVTheme.regularFont(13)
-        label.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4)
-        label.text = "内容由AI生成"
-        return label
-    }()
+         let label = UILabel()
+         label.textAlignment = .center
+         label.font = AVTheme.regularFont(13)
+         label.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4)
+         label.text = "内容由AI生成"
+         return label
+     }()
     
+    // 挂断
     open lazy var handupBtn: AUIAICallButton = {
         let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Hang Up"), iconBgColor: AUIAICallBundle.danger_strong, normalIcon: AUIAICallBundle.getCommonImage("cs_handup"))
         return btn
     }()
     
+    // 麦克风
     open lazy var muteAudioBtn: AUIAICallButton = {
-        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Mute"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("cs_mic_1"), selectedTitle:AUIAICallBundle.getString("Unmute"), selectedIcon:AUIAICallBundle.getCommonImage("cs_mic_0"))
+        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Mute"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("cs_mute_audio"), selectedTitle:AUIAICallBundle.getString("Unmute"), selectedIcon:AUIAICallBundle.getCommonImage("cs_mute_audio_selected"))
         return btn
     }()
     
+    
+    // 摄像头
     open lazy var muteCameraBtn: AUIAICallButton = {
-        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Turn Off Camera"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("ic_mute_camera"), selectedTitle:AUIAICallBundle.getString("Turn On Camera"), selectedIcon:AUIAICallBundle.getCommonImage("ic_mute_camera_selected"))
+        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Turn Off Camera"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("cs_mute_camera"), selectedTitle:AUIAICallBundle.getString("Turn On Camera"), selectedIcon:AUIAICallBundle.getCommonImage("cs_mute_camera_selected"))
         return btn
     }()
     
+    // 扬声器
     open lazy var switchSpeakerBtn: AUIAICallButton = {
-        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Turn Off Speaker"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("cs_video_0"), selectedTitle:AUIAICallBundle.getString("Turn On Speaker"), selectedIcon:AUIAICallBundle.getCommonImage("cs_video_1"))
-        return btn
-    }()
-    
-    lazy var switchCameraBtn: AVBlockButton = {
-        let btn = AVBlockButton()
-        btn.setImage(AUIAICallBundle.getCommonImage("ic_switch_camera"), for: .normal)
+        let btn = AUIAICallButton.create(title: AUIAICallBundle.getString("Turn Off Speaker"), iconBgColor: AVTheme.tsp_fill_ultraweak, normalIcon: AUIAICallBundle.getCommonImage("cs_speaker"), selectedTitle:AUIAICallBundle.getString("Turn On Speaker"), selectedIcon:AUIAICallBundle.getCommonImage("cs_speaker_selected"))
         return btn
     }()
     
@@ -159,7 +154,7 @@ import ARTCAICallKit
     
     open lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 81/255, green: 86/255, blue: 95/255, alpha: 1)
+        label.textColor = self.enableCamera ? UIColor.white : AVTheme.text_strong
         label.textAlignment = .center
         label.font = AVTheme.regularFont(15)
         label.text = ""

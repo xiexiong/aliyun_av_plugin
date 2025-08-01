@@ -14,9 +14,9 @@ import ARTCAICallKit
     public init(frame: CGRect, agentType: ARTCAICallAgentType) {
         self.agentType = agentType
         super.init(frame: frame)
-                
-//        self.addSubview(self.tipsLabel)
-        self.addSubview(self.agentAni)
+                 
+        self.addSubview(self.avatarView)
+//        self.addSubview(self.agentAni)
 
         self.setup()
     }
@@ -27,21 +27,18 @@ import ARTCAICallKit
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
         let hei = self.av_bottom - 228 - 18
         self.agentAni.frame = CGRect(x: 0, y: UIView.av_safeTop + 44, width: self.av_width, height: hei - UIView.av_safeTop - 44)
-        
+        self.avatarView.frame = CGRect(x: self.av_width / 2 - 80, y: UIView.av_safeTop + 204, width: 160, height: 160)
         self.updateAgentLayout()
     }
-            
-//    open lazy var tipsLabel: UILabel = {
-//        let label = UILabel()
-//        label.textColor = AVTheme.text_strong
-//        label.textAlignment = .center
-//        label.font = AVTheme.regularFont(14)
-//        label.text = ""
-//        return label
-//    }()
+    
+    open lazy var avatarView: UIImageView = {
+        let view = UIImageView()
+        view.image = AUIAICallBundle.getCommonImage("cs_avatar")
+        view.isHidden =  self.agentType != .VoiceAgent
+        return view
+    }()
 
     public let agentType: ARTCAICallAgentType!
     open lazy var agentAni: AUIAICallAgentAnimator = {
@@ -90,24 +87,13 @@ import ARTCAICallKit
     }
     
     private func updateAgentLayout() {
-        if agentType == .VoiceAgent {
-            let hei = self.av_bottom - 228 - 18
-//            self.tipsLabel.frame = CGRect(x: 0, y: hei, width: self.av_width, height: 18)
-        }
-        else if agentType == .AvatarAgent {
-            let hei = self.av_bottom - 228 - 18
-//            self.tipsLabel.frame = CGRect(x: 0, y: hei, width: self.av_width, height: 18)
+          if agentType == .AvatarAgent {
             self.agentView?.frame = self.bounds
         }
         else if agentType == .VisionAgent {
-            let hei = self.av_bottom - 240 - 18
-//            self.tipsLabel.frame = CGRect(x: 0, y: hei, width: self.av_width, height: 18)
             self.cameraView?.frame = self.bounds
         }
         else if agentType == .VideoAgent {
-            let hei = self.av_bottom - 240 - 18
-//            self.tipsLabel.frame = CGRect(x: 0, y: hei, width: self.av_width, height: 18)
-            
             self.updateVideoAgentLayout()
         }
     }

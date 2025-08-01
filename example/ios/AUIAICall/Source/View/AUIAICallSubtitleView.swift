@@ -7,13 +7,16 @@
 
 import UIKit
 import AUIFoundation
+import ARTCAICallKit
 
 @objcMembers open class AUIAICallSubtitleListView: UIView {
-        
-    public override init(frame: CGRect) {
+    var agentType: ARTCAICallAgentType = .VoiceAgent
+    public init(frame: CGRect,agentType: ARTCAICallAgentType) {
         super.init(frame: frame)
-        
-        self.addSubview(self.blurView)
+        if agentType == .VisionAgent {
+            self.agentType = agentType
+            self.addSubview(self.blurView)
+        }
         self.addSubview(self.collectionView)
         
         self.isUserInteractionEnabled = true
@@ -37,7 +40,7 @@ import AUIFoundation
     
     private var listSubtitle: [AUIAICallSubtitleCellItem] = []
     
-    private lazy var blurView: UIVisualEffectView = {
+    public lazy var blurView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurView = UIVisualEffectView(effect: blurEffect)
         return blurView
@@ -69,6 +72,7 @@ import AUIFoundation
         sub.sentenceId = sentenceId
         sub.subtitle = subtitle
         sub.isAgent = isAgent
+        sub.agentType = agentType
         self.listSubtitle.append(sub)
         self.collectionView.reloadData()
     }
@@ -129,7 +133,7 @@ extension AUIAICallSubtitleListView: UICollectionViewDelegate, UICollectionViewD
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 14.0
+        return 20
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -155,6 +159,7 @@ extension AUIAICallSubtitleListView: UICollectionViewDelegate, UICollectionViewD
     open var subtitle: String = ""
     open var isAgent: Bool = false
     open var size: CGSize = CGSize.zero
+    open var agentType: ARTCAICallAgentType = .VoiceAgent
 }
 
 @objcMembers open class AUIAICallSubtitleCell: UICollectionViewCell {
@@ -182,7 +187,7 @@ extension AUIAICallSubtitleListView: UICollectionViewDelegate, UICollectionViewD
     open lazy var textLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = AVTheme.regularFont(16.0)
+        label.font = AVTheme.regularFont(17.0)
         label.textColor = AVTheme.ic_strong
         return label
     }()
@@ -197,10 +202,10 @@ extension AUIAICallSubtitleListView: UICollectionViewDelegate, UICollectionViewD
                 self.textLabel.text = ""
             }
             if self.item?.isAgent == true {
-                self.textLabel.textColor = AVTheme.text_weak
+                self.textLabel.textColor = self.item?.agentType == .VoiceAgent ? AVTheme.text_weak : .white
             }
             else {
-                self.textLabel.textColor = AVTheme.ic_strong
+                self.textLabel.textColor = self.item?.agentType == .VoiceAgent ? AVTheme.ic_strong : UIColor(red: 150/255, green: 157/255, blue: 167/255, alpha:1)
             }
         }
     }
@@ -228,7 +233,7 @@ extension AUIAICallSubtitleCell {
             return
         }
         
-        let attr = NSAttributedString(string: item.subtitle, attributes: [.font: AVTheme.regularFont(16.0)])
+        let attr = NSAttributedString(string: item.subtitle, attributes: [.font: AVTheme.regularFont(17.0)])
         item.size = self.computContentSize(attributeText: attr, maxWidth: maxWidth)
     }
 }

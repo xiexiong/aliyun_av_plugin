@@ -88,6 +88,8 @@ import ARTCAICallKit
     
     
     // 创建&开始通话
+    open var handupCallback: (() -> Void)? = nil
+
     open func start() {
         if self.state != .None {
             return
@@ -102,57 +104,59 @@ import ARTCAICallKit
         ARTCAICallEngineDebuger.Debug_UpdateExtendInfo(key: "AgentType", value: self.config.getWorkflowType())
         ARTCAICallEngineDebuger.Debug_UpdateExtendInfo(key: "UserId", value: self.userId)
         
+//        
+//        AUIAICallAuthTokenHelper.shared.fetchAuthToken(userId: self.userId) {[weak self] authToken, error in
+//            guard let self = self else {
+//                return
+//            }
+//            
+//            if self.state != .Connecting {
+//                return
+//            }
+//            
+//            if let _ = error {
+//                self.errorCode = .TokenExpired
+//                self.state = .Error
+//                self.delegate?.onAICallUserTokenExpired?()
+//            }
+//            else {
         
-        AUIAICallAuthTokenHelper.shared.fetchAuthToken(userId: self.userId) {[weak self] authToken, error in
-            guard let self = self else {
-                return
-            }
-            
-            if self.state != .Connecting {
-                return
-            }
-            
-            if let _ = error {
-                self.errorCode = .TokenExpired
-                self.state = .Error
-                self.delegate?.onAICallUserTokenExpired?()
-            }
-            else {
-                ARTCAICallEngineDebuger.Debug_UpdateExtendInfo(key: "JoinToken", value: authToken)
+        
+        ARTCAICallEngineDebuger.Debug_UpdateExtendInfo(key: "JoinToken", value: self.config.userJoinToken ?? "")
                 
-                let callConfig = ARTCAICallConfig()
-                callConfig.agentId = self.config.agentId!
-                callConfig.agentType = self.config.agentType
-                callConfig.userId = self.userId
-                callConfig.region = self.config.region!
-                callConfig.userData = self.config.userData
-                callConfig.agentConfig = self.config.agentConfig
-                callConfig.chatSyncConfig = self.config.chatSyncConfig
-                callConfig.userJoinToken = authToken
-                
-                // 这里frameRate设置为5，需要根据控制台上的智能体的抽帧帧率（一般为2）进行调整，最大不建议超过15fps
-                // bitrate: frameRate超过10可以设置为512
-                if self.config.agentType == .VisionAgent{
-                    callConfig.videoConfig = ARTCAICallVideoConfig(frameRate: 5, bitrate: 340, useFrontCameraDefault: false)
-                }
-                if self.config.agentType == .VideoAgent {
-                    callConfig.videoConfig = ARTCAICallVideoConfig(frameRate: 5, bitrate: 340, useFrontCameraDefault: true)
-                }
-                
-                _ = self.engine.muteLocalCamera(mute: self.config.muteLocalCamera)
-                _ = self.engine.muteMicrophone(mute: self.config.muteMicrophone)
-                _ = self.engine.enablePushToTalk(enable: self.config.agentConfig.enablePushToTalk)
-                if self.engine.call(config: callConfig) {
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
-                        AUIAICallAuthTokenHelper.shared.requestNewAuthToken() // Request for next call
-                    }
-                }
-                else {
-                    self.errorCode = .InvalidParames
-                    self.state = .Error
-                }
+        let callConfig = ARTCAICallConfig()
+        callConfig.agentId = self.config.agentId!
+        callConfig.agentType = self.config.agentType
+        callConfig.userId = self.userId
+        callConfig.region = self.config.region!
+        callConfig.userData = self.config.userData
+        callConfig.agentConfig = self.config.agentConfig
+        callConfig.chatSyncConfig = self.config.chatSyncConfig
+        callConfig.userJoinToken = self.config.userJoinToken!
+        
+        // 这里frameRate设置为5，需要根据控制台上的智能体的抽帧帧率（一般为2）进行调整，最大不建议超过15fps
+        // bitrate: frameRate超过10可以设置为512
+        if self.config.agentType == .VisionAgent{
+            callConfig.videoConfig = ARTCAICallVideoConfig(frameRate: 5, bitrate: 340, useFrontCameraDefault: false)
+        }
+        if self.config.agentType == .VideoAgent {
+            callConfig.videoConfig = ARTCAICallVideoConfig(frameRate: 5, bitrate: 340, useFrontCameraDefault: true)
+        }
+        
+        _ = self.engine.muteLocalCamera(mute: self.config.muteLocalCamera)
+        _ = self.engine.muteMicrophone(mute: self.config.muteMicrophone)
+        _ = self.engine.enablePushToTalk(enable: self.config.agentConfig.enablePushToTalk)
+        if self.engine.call(config: callConfig) {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+                AUIAICallAuthTokenHelper.shared.requestNewAuthToken() // Request for next call
             }
         }
+        else {
+            self.errorCode = .InvalidParames
+            self.state = .Error
+        }
+//            }
+//        }
     }
     
     // 挂断
@@ -160,6 +164,8 @@ import ARTCAICallKit
         if self.state != .None {
             self.engine.handup(true)
             self.state = .Over
+            // 挂断后回调通知外部
+            self.handupCallback?()
         }
     }
     
