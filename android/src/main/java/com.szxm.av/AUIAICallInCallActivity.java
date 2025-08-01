@@ -430,10 +430,8 @@ public class AUIAICallInCallActivity extends ComponentActivity {
                         setTimeTitleWhite(false);
                     }
                 } else {
-                    // btnAiCallFullScreenSubtitle.setBackgroundResource(R.drawable.bg_btn_subtitle_white);
-                    // btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_1A1A1A));
-                    btnAiCallFullScreenSubtitle.setBackgroundResource(R.drawable.bg_btn_subtitle_black);
-                    btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.white));
+                    btnAiCallFullScreenSubtitle.setBackgroundResource(R.drawable.bg_btn_subtitle_white);
+                    btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_1A1A1A));
                     btnCameraDirectionNew.setVisibility(GONE);
                     setTimeTitleWhite(false);
                 }
@@ -1426,10 +1424,8 @@ public class AUIAICallInCallActivity extends ComponentActivity {
 
     private void setType51565F(){
         if (!mIsFullScreenSubtitleOpen){
-            // btnAiCallFullScreenSubtitle.setBackground(getResources().getDrawable(R.drawable.bg_btn_subtitle_white));
-            // btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_51565F));
-            btnAiCallFullScreenSubtitle.setBackground(getResources().getDrawable(R.drawable.bg_btn_subtitle_black));
-            btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.white));
+            btnAiCallFullScreenSubtitle.setBackground(getResources().getDrawable(R.drawable.bg_btn_subtitle_white));
+            btnAiCallFullScreenSubtitle.setTextColor(getResources().getColor(R.color.color_51565F));
             btnCameraDirectionNew.setVisibility(GONE);
         }
         setTimeTitleWhite(false);
