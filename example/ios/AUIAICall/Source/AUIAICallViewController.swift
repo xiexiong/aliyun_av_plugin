@@ -40,28 +40,25 @@ import ARTCAICallKit
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.view.backgroundColor = AVTheme.bg_medium
-        
+          
         self.callContentView.frame = self.view.bounds
         self.callContentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onContentViewClicked(recognizer:))))
 
-        self.gradientlayer.frame = CGRect(x: 0, y: 0, width: self.view.av_width, height: UIView.av_safeTop + 44)
+        self.backgroundView.frame = self.view.frame;
         
 #if AICALL_ENABLE_FEEDBACK
         self.reportBtn = self.setupReportBtn()
 #endif
         
-        self.settingBtn.frame = CGRect(x: self.view.av_width - 6 - 44, y: UIView.av_safeTop, width: 44, height: 44)
+//        self.settingBtn.frame = CGRect(x: self.view.av_width - 6 - 44, y: UIView.av_safeTop, width: 44, height: 44)
         
-        self.subtitleBtn.sizeToFit()
-        self.subtitleBtn.center = CGPoint(x: self.settingBtn.av_left - self.subtitleBtn.av_width / 2.0  - 4, y: self.settingBtn.av_centerY)
+        self.subtitleBtn.frame = CGRect(x: self.view.av_width - 56 - 32, y: UIView.av_safeTop + 6, width: 56, height: 32)
         self.subtitleListView.frame = self.view.bounds
         
-        self.titleLabel.sizeToFit()
-        self.titleLabel.center = CGPoint(x: self.view.av_width / 2.0, y: self.settingBtn.av_centerY)
+//        self.titleLabel.sizeToFit()
+//        self.titleLabel.center = CGPoint(x: self.view.av_width / 2.0, y: self.settingBtn.av_centerY)
         
-        self.bottomView.frame = CGRect(x: 0, y: self.view.av_height - 308, width: self.view.av_width, height: 308)
+        self.bottomView.frame = CGRect(x: 0, y: self.view.av_height - 243 - UIView.av_safeBottom, width: self.view.av_width, height: 243 + UIView.av_safeBottom)
         self.bottomView.isHidden = false
         self.bottomView.enablePushToTalk = self.controller.config.agentConfig.enablePushToTalk
                 
@@ -144,9 +141,16 @@ import ARTCAICallKit
         let layer = CAGradientLayer()
         layer.startPoint = CGPoint(x: 0.5, y: 0.0)
         layer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        layer.colors = [UIColor.black.withAlphaComponent(1.0).cgColor, UIColor.black.withAlphaComponent(0).cgColor]
+        layer.colors = [UIColor(red: 255/255, green: 241/255, blue: 220/255, alpha: 1.0).cgColor,UIColor(red: 255/255, green: 241/255, blue: 220/255, alpha: 0).cgColor]
         self.view.layer.addSublayer(layer)
         return layer
+    }()
+    
+    open lazy var backgroundView: UIImageView = {
+        let bgView = UIImageView()
+        bgView.image = AUIAICallBundle.getCommonImage("cs_view_bg");
+        self.view.addSubview(bgView)
+        return bgView
     }()
     
     open lazy var settingBtn: UIButton = {
@@ -162,15 +166,15 @@ import ARTCAICallKit
     open lazy var subtitleBtn: UIButton = {
         let btn = AVBlockButton()
         btn.setTitle(AUIAICallBundle.getString("Subtitles"), for: .normal)
-        btn.titleLabel?.font = AVTheme.regularFont(12)
-        btn.setBackgroundColor(AVTheme.fill_medium, for: .normal)
-        btn.setBackgroundColor(AVTheme.fill_infrared, for: .selected)
-        btn.setTitleColor(AVTheme.text_strong, for: .normal)
-        btn.setTitleColor(AVTheme.text_infrared, for: .selected)
+        btn.titleLabel?.font = AVTheme.mediumFont(16)
+        btn.setBackgroundColor(UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.4), for: .normal)
+//        btn.setBackgroundColor(AVTheme.fill_infrared, for: .selected)
+        btn.setTitleColor(UIColor(red: 81/255, green: 86/255, blue: 95/255, alpha: 1), for: .normal)
+//        btn.setTitleColor(AVTheme.text_infrared, for: .selected)
         btn.addTarget(self, action: #selector(onSubtitleBtnClicked), for: .touchUpInside)
-        btn.layer.cornerRadius = 4
+        btn.layer.cornerRadius = 16
         btn.layer.masksToBounds = true
-        btn.contentEdgeInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
+//        btn.contentEdgeInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
         self.view.addSubview(btn)
         return btn
     }()
@@ -204,6 +208,9 @@ import ARTCAICallKit
         view.muteAudioBtn.tappedAction = { [weak self] btn in
             self?.controller.muteMicrophone(mute: !btn.isSelected)
             btn.isSelected = self?.controller.config.muteMicrophone == true
+            if (btn.isSelected) {
+                view.tipsLabel.text = "麦克风已禁用"
+            }
         }
         view.muteCameraBtn.tappedAction = { [weak self] btn in
             self?.controller.muteLocalCamera(mute: !btn.isSelected)
@@ -304,7 +311,7 @@ import ARTCAICallKit
                 }
             }
             voiceprintTipsLabel.isSelected = true
-            voiceprintTipsLabel.layoutAt(frame: CGRect(x: 0, y: self.callContentView.tipsLabel.av_top - 40 - 10, width: self.view.av_width, height: 40))
+            voiceprintTipsLabel.layoutAt(frame: CGRect(x: 0, y: self.bottomView.tipsLabel.av_top - 40 - 10, width: self.view.av_width, height: 40))
             self.view.addSubview(voiceprintTipsLabel)
             self.voiceprintTipsLabel = voiceprintTipsLabel
         }
@@ -467,16 +474,16 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
         
         // 更新提示语
         if self.controller.state == .None {
-            self.callContentView.tipsLabel.text = nil
+            self.bottomView.tipsLabel.text = nil
         }
         else if self.controller.state == .Connecting {
-            self.callContentView.tipsLabel.text = AUIAICallBundle.getString("Connecting...")
+            self.bottomView.tipsLabel.text = AUIAICallBundle.getString("Connecting...")
         }
         else if self.controller.state == .Connected {
             self.onAICallAgentStateChanged()
         }
         else if self.controller.state == .Over {
-            self.callContentView.tipsLabel.text = AUIAICallBundle.getString("Call Ended")
+            self.bottomView.tipsLabel.text = AUIAICallBundle.getString("Call Ended")
         }
         else if self.controller.state == .Error {
             ARTCAICallEngineLog.WriteLog(.Error, "Call Error: \(self.controller.errorCode)")
@@ -536,7 +543,7 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
             default:
                 break
             }
-            self.callContentView.tipsLabel.text = msg
+            self.bottomView.tipsLabel.text = msg
             self.countdownTimer.invalidate()
             
             if self.controller.errorCode == .AvatarRoutesExhausted {
@@ -544,6 +551,9 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
                     self.controller.handup()
                     
                 }
+            }
+            if (self.controller.config.muteMicrophone) {
+                self.bottomView.tipsLabel.text = "麦克风已禁用"
             }
         }
         
@@ -559,20 +569,22 @@ extension AUIAICallViewController: AUIAICallControllerDelegate {
     
     public func onAICallAgentStateChanged() {
         if self.controller.agentState == .Listening {
-            self.callContentView.tipsLabel.text = AUIAICallBundle.getString("You Talk, I'm Listening...")
+            self.bottomView.tipsLabel.text = AUIAICallBundle.getString("You Talk, I'm Listening...")
         }
         else if self.controller.agentState == .Thinking {
-            self.callContentView.tipsLabel.text = AUIAICallBundle.getString("Thinking...")
+            self.bottomView.tipsLabel.text = AUIAICallBundle.getString("Thinking...")
         }
         else if self.controller.agentState == .Speaking {
             if self.controller.config.agentConfig.interruptConfig.enableVoiceInterrupt && !self.controller.config.agentConfig.enablePushToTalk {
-                self.callContentView.tipsLabel.text = AUIAICallBundle.getString("I'm Replying, Tap Screen or Speak to Interrupt Me")
+                self.bottomView.tipsLabel.text = AUIAICallBundle.getString("I'm Replying, Tap Screen or Speak to Interrupt Me")
             }
             else {
-                self.callContentView.tipsLabel.text = AUIAICallBundle.getString("I'm Replying, Tap Screen to Interrupt Me")
+                self.bottomView.tipsLabel.text = AUIAICallBundle.getString("I'm Replying, Tap Screen to Interrupt Me")
             }
         }
-        
+        if (self.controller.config.muteMicrophone) {
+            self.bottomView.tipsLabel.text = "麦克风已禁用"
+        }
         self.callContentView.agentAni.updateAgentAnimator(state: self.controller.agentState)
     }
     

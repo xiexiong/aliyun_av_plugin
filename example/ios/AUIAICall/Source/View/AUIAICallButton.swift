@@ -14,9 +14,7 @@ import AUIFoundation
         self.isSelected = false
         super.init(frame: frame)
         
-        self.addSubview(self.imageBgView)
-        self.imageBgView.addSubview(self.imageView)
-        self.addSubview(self.titleLabel)
+        self.addSubview(self.imageView)
         self.isSelected = false
         
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTapped)))
@@ -32,28 +30,9 @@ import AUIFoundation
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
-        var iconWidth = self.av_width
-        var iconHeight = self.av_height - 18 - 8
-        if self.iconLength != CGFloat.leastNormalMagnitude {
-            iconWidth = self.iconLength
-            iconHeight = iconWidth
-        }
-        
-        var iconCorner = iconHeight / 2.0
-        if self.iconCorner != CGFloat.leastNormalMagnitude {
-            iconCorner = self.iconCorner
-        }
-        
-        self.imageBgView.frame = CGRect(x: (self.av_width - iconWidth) / 2.0, y: 0, width: iconWidth, height: iconHeight)
-        self.imageBgView.layer.cornerRadius = iconCorner
-        self.imageBgView.layer.masksToBounds = true
-        self.imageView.av_size = CGSize(width: iconHeight - self.iconMargin * 2, height: iconHeight - self.iconMargin * 2)
-        self.imageView.center = CGPoint(x: iconWidth / 2.0, y: iconHeight / 2.0)
-        
-        self.titleLabel.sizeToFit()
-        let width = max(self.av_width, self.titleLabel.av_width)
-        self.titleLabel.frame = CGRect(x: (self.av_width - width) / 2.0, y: self.av_height - 18, width: width, height: 18.0)
+       
+        self.imageView.av_size = CGSize(width: 70, height: 70)
+        self.imageView.center = CGPoint(x: self.av_width / 2.0, y: self.av_height / 2.0)
     }
     
     open var iconLength: CGFloat = CGFloat.leastNormalMagnitude
@@ -70,7 +49,6 @@ import AUIFoundation
         didSet {
             self.imageBgView.backgroundColor = self.isSelected ? self.selectedBgColor : self.normalBgColor
             self.imageView.image = self.isSelected ? self.selectedImage : self.normalImage
-            self.titleLabel.text = self.isSelected ? self.selectedTitle : self.normalTitle
             self.setNeedsLayout()
         }
     }

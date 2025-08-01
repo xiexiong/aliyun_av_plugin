@@ -1,25 +1,33 @@
-import Flutter
-import AUIAICall
-import UIKit
-
 public class AliyunAvPlugin: NSObject, FlutterPlugin {
+  private static var channel: FlutterMethodChannel?
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "aliyun_av_plugin", binaryMessenger: registrar.messenger())
+    AliyunAvPlugin.channel = channel
     let instance = AliyunAvPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "callVoiceAgent":
-        AUIAICallManager.defaultManager.startCall(agentType: .VoiceAgent)
-      // TODO: 调用 AliVCSDK_ARTC/ARTCAICallKit 启动音视频通话
-      result(true)
-    case "callViodeAgent":
-        AUIAICallManager.defaultManager.startCall(agentType: .VisionAgent)
-      result(true)
-    default:
-      result(FlutterMethodNotImplemented)
-    }
+      guard let args = call.arguments as? [String: Any],
+            let type = args["agentType"] as? String else {
+          result(false)
+          return
+      }
+
+      switch type {
+      case "VoiceAgent":
+          AUIAICallManager.defaultManager.startCall(agentType: .VoiceAgent) {
+              AliyunAvPlugin.channel?.invokeMethod("onSubtitleUpdate", arguments: null)
+          }
+          result(true)
+      case "VisionAgent":
+          AUIAICallManager.defaultManager.startCall(agentType: .VisionAgent) {
+              AliyunAvPlugin.channel?.invokeMethod("onSubtitleUpdate", arguments: null)
+          }
+          result(true)
+      default:
+          result(FlutterMethodNotImplemented)
+      }
   }
 }

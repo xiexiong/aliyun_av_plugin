@@ -9,9 +9,7 @@ class AliyunAvPlugin {
   static Future<bool> callAgentType({required RtcConfig rtcConfig}) async {
     try {
       // 建议将 rtcConfig 转为 Map 传递，确保平台端能正确解析
-      final result = await _channel.invokeMethod<bool>('callAgentType', {
-        'rtcConfigBean': rtcConfig.toMap(),
-      });
+      final result = await _channel.invokeMethod<bool>('callAgentType', rtcConfig.toMap());
       return result ?? false;
     } on PlatformException catch (e) {
       // 可根据实际需求打印日志或上报错误

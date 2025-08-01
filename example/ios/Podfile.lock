@@ -72,7 +72,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AliVCInteractionMessage: 84edc775865ab54a43e085d5b7660e345e8f80d0
   AliVCSDK_ARTC: fbbeef4a1e42c421ecae0dff2420eedc77512d10
-  aliyun_av_plugin: cbb6b5bb6958786ff0513794b60146495b2bd67d
+  aliyun_av_plugin: 7de4438614c1f03469c723b4f481ded0bb5b0b6d
   ARTCAICallKit: f957e46694bf4e07a384bf927331586677147b2b
   AUIAICall: f8158d23c34bc1037f8ada8ffd3ecebecb339a31
   AUIFoundation: 52ca58ffc03377ff0907dab6995cdf618dff5202
