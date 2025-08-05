@@ -6,8 +6,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Av">
+        android:supportsRtl="true">
         <activity
             android:name="com.szxm.av.AUIAICallInCallActivity"
             android:screenOrientation="portrait"
